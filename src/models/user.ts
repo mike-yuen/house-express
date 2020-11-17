@@ -1,31 +1,51 @@
-import { IUser } from '../interfaces/IUser';
+import { IUser, UserRole } from '@/interfaces/IUser';
 import mongoose from 'mongoose';
+import { v4 as uuidv4 } from 'uuid';
 
-const User = new mongoose.Schema(
+const transform = (doc: mongoose.Document, ret: any) => {
+  ret.id = ret._id.toString();
+  delete ret._id;
+};
+
+const UserSchema = new mongoose.Schema(
   {
-    name: {
+    _id: { type: String, required: true, default: uuidv4() },
+    username: {
       type: String,
-      required: [true, 'Please enter a full name'],
+      required: [true, 'Please enter username'],
+      unique: [true, 'Username must be unique'],
       index: true,
     },
-
     email: {
       type: String,
       lowercase: true,
-      unique: true,
+      required: [true, 'Please enter email'],
+      unique: [true, 'Email must be unique'],
       index: true,
     },
-
+    first_name: { type: String, index: true },
+    last_name: { type: String, index: true },
     password: String,
-
     salt: String,
+    role: { type: String, default: UserRole.STAFF },
 
-    role: {
-      type: String,
-      default: 'user',
-    },
+    last_login: { type: Date },
+    date_joined: { type: Date, default: Date.now },
+    last_change_password: { type: Date, default: Date.now },
   },
-  { timestamps: true },
+  {
+    toJSON: {
+      virtuals: true,
+      getters: true,
+      transform: transform,
+    },
+    toObject: {
+      virtuals: true,
+      getters: true,
+      transform: transform,
+    },
+    // timestamps: true,
+  },
 );
 
-export default mongoose.model<IUser & mongoose.Document>('User', User);
+export default mongoose.model<IUser & mongoose.Document>('User', UserSchema, 'crypto_user');

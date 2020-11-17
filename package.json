@@ -15,6 +15,9 @@
     "lint:js": "npm run lint:eslint src/",
     "lint:fix": "npm run lint:js -- --fix"
   },
+  "_moduleAliases": {
+    "@": "src"
+  },
   "dependencies": {
     "agenda": "^3.1.0",
     "agendash": "^1.0.0",
@@ -33,12 +36,14 @@
     "lodash": "^4.17.20",
     "mailgun-js": "^0.22.0",
     "method-override": "^3.0.0",
+    "module-alias": "^2.2.2",
     "moment": "^2.29.0",
     "moment-timezone": "^0.5.31",
     "mongoose": "^5.10.6",
     "morgan": "^1.10.0",
     "reflect-metadata": "^0.1.13",
     "typedi": "^0.8.0",
+    "uuid": "^8.3.1",
     "winston": "^3.3.3"
   },
   "devDependencies": {
@@ -48,6 +53,7 @@
     "@types/lodash": "^4.14.161",
     "@types/mongoose": "^5.7.36",
     "@types/node": "^14.11.2",
+    "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.2.0",
     "@typescript-eslint/parser": "^4.2.0",
     "eslint": "^7.9.0",
