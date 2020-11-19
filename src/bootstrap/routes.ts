@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import auth from './routes/auth';
-import user from './routes/user';
-import agendash from './routes/agendash';
+import auth from '../modules/auth/auth.route';
+import user from '../modules/users/user.route';
+import agendash from '../modules/agendadash/agendash.route';
 
 // guaranteed to get dependencies
 export default () => {

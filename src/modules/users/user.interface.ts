@@ -24,6 +24,23 @@ export interface IUserInputDTO {
   role: string;
 }
 
+export interface IUserOutputDTO {
+  id: string;
+  username: string;
+  first_name?: string;
+  last_name?: string;
+  email: string;
+  role: string;
+
+  last_login?: Date;
+  date_joined?: Date;
+  last_change_password?: Date;
+
+  is_active?: boolean;
+  is_two_factor?: boolean;
+  is_two_factor_verified?: boolean;
+}
+
 export enum UserRole {
   SUPER_ADMIN = 'SuperAdmin',
   ADMIN = 'Admin',

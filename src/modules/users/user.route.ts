@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import middlewares from '../middlewares';
+import middlewares from '../auth/middlewares';
 const route = Router();
 
 export default (app: Router) => {
