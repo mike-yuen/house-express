@@ -1,7 +1,7 @@
 import Agenda from 'agenda';
 import config from '../config';
 
-export default ({ mongoConnection }) => {
+export default ({ mongoConnection }: any): Agenda => {
   return new Agenda({
     mongo: mongoConnection,
     db: { collection: config.agenda.dbCollection },

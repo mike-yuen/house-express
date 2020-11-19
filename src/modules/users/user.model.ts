@@ -1,4 +1,4 @@
-import { IUser, UserRole } from '@/interfaces/IUser';
+import { IUser, UserRole } from '@/modules/users/user.interface';
 import mongoose from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -48,4 +48,6 @@ const UserSchema = new mongoose.Schema(
   },
 );
 
-export default mongoose.model<IUser & mongoose.Document>('User', UserSchema, 'crypto_user');
+const UserModel = mongoose.model<IUser & mongoose.Document>('User', UserSchema, 'crypto_user');
+
+export default UserModel;

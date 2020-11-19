@@ -2,11 +2,12 @@ import expressLoader from './express';
 import dependencyInjectorLoader from './dependencyInjector';
 import mongooseLoader from './mongoose';
 import jobsLoader from './jobs';
-import Logger from './logger';
+import Logger from '@/utils/logger';
 //We have to import at least all the events once so they can be triggered
 import './events';
+import UserModel from '@/modules/users/user.model';
 
-export default async ({ expressApp }) => {
+const bootstrap = async ({ expressApp }) => {
   const mongoConnection = await mongooseLoader();
   Logger.info('✌️ DB loaded and connected!');
 
@@ -20,8 +21,7 @@ export default async ({ expressApp }) => {
 
   const userModel = {
     name: 'userModel',
-    // Notice the require syntax and the '.default'
-    model: require('../models/user').default,
+    model: UserModel,
   };
 
   // It returns the agenda instance because it's needed in the subsequent loaders
@@ -41,3 +41,5 @@ export default async ({ expressApp }) => {
   await expressLoader({ app: expressApp });
   Logger.info('✌️ Express loaded');
 };
+
+export default bootstrap;
