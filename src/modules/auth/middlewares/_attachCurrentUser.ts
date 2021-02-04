@@ -1,6 +1,6 @@
 import { Container } from 'typedi';
 import mongoose from 'mongoose';
-import { IUser } from '../../users/user.interface';
+import { IUser } from '@/modules/users/user.interface';
 import { Logger } from 'winston';
 
 /**

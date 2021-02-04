@@ -12,7 +12,7 @@ export default class UserRepository {
     @Inject('logger') private logger: Logger,
   ) {}
 
-  public async SignUp(userInputDTO: IUserInputDTO): Promise<IUserOutputDTO> {
+  public SignUp = async (userInputDTO: IUserInputDTO): Promise<IUserOutputDTO> => {
     try {
       const salt = randomBytes(32);
       /**
@@ -47,9 +47,9 @@ export default class UserRepository {
       this.logger.error(e);
       throw e;
     }
-  }
+  };
 
-  public async SignIn(email: string, password: string): Promise<IUserOutputDTO> {
+  public SignIn = async (email: string, password: string): Promise<IUserOutputDTO> => {
     const userRecord = await this.userModel.findOne({ email });
     if (!userRecord) {
       throw new Error('User not registered');
@@ -71,5 +71,5 @@ export default class UserRepository {
     } else {
       throw new Error('Invalid Password');
     }
-  }
+  };
 }
