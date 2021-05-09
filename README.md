@@ -1,4 +1,4 @@
-# Crypto Node.js project 🛡️
+# House Node.js project 🛡️
 
 ## Development
 

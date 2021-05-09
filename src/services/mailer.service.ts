@@ -1,5 +1,5 @@
 import { Service, Inject } from 'typedi';
-import { IUser } from '../modules/users/user.interface';
+import { IUser } from '@/modules/users/user.interface';
 
 @Service()
 export default class MailerService {
