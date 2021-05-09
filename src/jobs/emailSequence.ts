@@ -1,5 +1,5 @@
 import { Container } from 'typedi';
-import MailerService from '../services/mailer.service';
+import MailerService from '@/services/mailer.service';
 import { Logger } from 'winston';
 
 export default class EmailSequenceJob {

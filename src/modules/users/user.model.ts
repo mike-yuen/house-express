@@ -1,4 +1,4 @@
-import { IUser, UserRole } from '@/modules/users/user.interface';
+import { IUser, UserRole } from './user.interface';
 import mongoose from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 
