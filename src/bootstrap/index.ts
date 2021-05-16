@@ -5,7 +5,7 @@ import jobsLoader from './jobs';
 import Logger from '@/utils/logger';
 //We have to import at least all the events once so they can be triggered
 import './events';
-import UserModel from '@/modules/users/user.model';
+import UserModel from '@/modules/users/model';
 
 const bootstrap = async ({ expressApp }) => {
   const mongoConnection = await mongooseLoader();

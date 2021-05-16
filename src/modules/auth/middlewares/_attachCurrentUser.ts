@@ -1,14 +1,8 @@
 import { Container } from 'typedi';
 import mongoose from 'mongoose';
-import { IUser } from '@/modules/users/user.interface';
+import { IUser } from '@/modules/users/interface';
 import { Logger } from 'winston';
 
-/**
- * Attach user to req.currentUser
- * @param {*} req Express req Object
- * @param {*} res  Express res Object
- * @param {*} next  Express next Function
- */
 const attachCurrentUser = async (req, res, next) => {
   const Logger: Logger = Container.get('logger');
   try {
