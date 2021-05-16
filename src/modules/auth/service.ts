@@ -2,10 +2,10 @@ import { Service, Inject } from 'typedi';
 import jwt from 'jsonwebtoken';
 // import MailerService from './mailer';
 import config from '@/config';
-import { IUserOutputDTO, IUserInputDTO } from '@/modules/users/user.interface';
-import { EventDispatcher, EventDispatcherInterface } from '@/decorators/eventDispatcher';
-import events from '@/subscribers/events';
-import UserRepository from '@/modules/users/user.repository';
+import { IUserOutputDTO, IUserInputDTO } from '@/modules/users/interface';
+import { EventDispatcher, EventDispatcherInterface } from '@/utils/decorators/eventDispatcher';
+import events from '@/modules/users/subscribers/events';
+import UserRepository from '@/modules/users/repository';
 import { Logger } from 'winston';
 
 @Service()

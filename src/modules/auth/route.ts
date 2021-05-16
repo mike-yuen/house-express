@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { Container } from 'typedi';
 import middlewares from './middlewares';
-import * as userSchema from './auth.validator';
-import AuthController from './auth.controller';
+import * as userSchema from './validator';
+import AuthController from './controller';
 
 const route = Router();
 
@@ -12,7 +12,7 @@ export default (app: Router) => {
   // @POST: /signup
   route.post('/signup', userSchema.SignUpSchema, authController.SignUp);
 
-  // // @POST: /signin
+  // @POST: /signin
   route.post('/signin', userSchema.SignInSchema, authController.SignIn);
 
   // /**

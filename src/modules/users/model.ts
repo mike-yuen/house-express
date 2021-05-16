@@ -1,6 +1,5 @@
-import { IUser, UserRole } from './user.interface';
+import { IUser, UserRole } from './interface';
 import mongoose from 'mongoose';
-import { v4 as uuidv4 } from 'uuid';
 
 const transform = (doc: mongoose.Document, ret: any) => {
   ret.id = ret._id.toString();
@@ -9,7 +8,6 @@ const transform = (doc: mongoose.Document, ret: any) => {
 
 const UserSchema = new mongoose.Schema(
   {
-    _id: { type: String, required: true, default: uuidv4() },
     username: {
       type: String,
       required: [true, 'Please enter username'],
@@ -23,15 +21,24 @@ const UserSchema = new mongoose.Schema(
       unique: [true, 'Email must be unique'],
       index: true,
     },
-    first_name: { type: String, index: true },
-    last_name: { type: String, index: true },
+    firstName: {
+      type: String,
+      index: true,
+    },
+    lastName: {
+      type: String,
+      index: true,
+    },
     password: String,
     salt: String,
-    role: { type: String, default: UserRole.STAFF },
+    role: {
+      type: String,
+      default: UserRole.USER,
+      enum: UserRole,
+    },
 
-    last_login: { type: Date },
-    date_joined: { type: Date, default: Date.now },
-    last_change_password: { type: Date, default: Date.now },
+    lastLogin: { type: Date },
+    lastChangePassword: { type: Date },
   },
   {
     toJSON: {
@@ -44,10 +51,10 @@ const UserSchema = new mongoose.Schema(
       getters: true,
       transform: transform,
     },
-    // timestamps: true,
+    timestamps: true,
   },
 );
 
-const UserModel = mongoose.model<IUser & mongoose.Document>('User', UserSchema, 'crypto_user');
+const UserModel = mongoose.model<IUser & mongoose.Document>('User', UserSchema, 'users');
 
 export default UserModel;

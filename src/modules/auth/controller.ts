@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { Service, Inject } from 'typedi';
 import { Logger } from 'winston';
-import { IUserInputDTO } from '@/modules/users/user.interface';
-import AuthService from './auth.service';
+import { IUserInputDTO } from '@/modules/users/interface';
+import AuthService from './service';
 
 @Service()
 export default class AuthController {
