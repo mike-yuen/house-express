@@ -1,4 +1,4 @@
-import { IUser, UserRole } from './interface';
+import { IUser, UserRoles } from './interface';
 import mongoose from 'mongoose';
 
 const transform = (doc: mongoose.Document, ret: any) => {
@@ -21,11 +21,7 @@ const UserSchema = new mongoose.Schema(
       unique: [true, 'Email must be unique'],
       index: true,
     },
-    firstName: {
-      type: String,
-      index: true,
-    },
-    lastName: {
+    displayName: {
       type: String,
       index: true,
     },
@@ -33,12 +29,16 @@ const UserSchema = new mongoose.Schema(
     salt: String,
     role: {
       type: String,
-      default: UserRole.USER,
-      enum: UserRole,
+      enum: Object.values(UserRoles),
+      default: UserRoles.USER,
     },
 
-    lastLogin: { type: Date },
-    lastChangePassword: { type: Date },
+    lastLogin: {
+      type: Date,
+    },
+    lastChangePassword: {
+      type: Date,
+    },
   },
   {
     toJSON: {
@@ -55,6 +55,6 @@ const UserSchema = new mongoose.Schema(
   },
 );
 
-const UserModel = mongoose.model<IUser & mongoose.Document>('User', UserSchema, 'users');
+const UserModel = mongoose.model<IUser & mongoose.Document>('Users', UserSchema, 'users');
 
 export default UserModel;

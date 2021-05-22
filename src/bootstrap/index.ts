@@ -1,7 +1,7 @@
 import expressLoader from './express';
 import dependencyInjectorLoader from './dependencyInjector';
-import mongooseLoader from './mongoose';
-import jobsLoader from './jobs';
+import mongooseLoader from './database/mongoose';
+import jobsLoader from './jobScheduler/jobs';
 import Logger from '@/utils/logger';
 //We have to import at least all the events once so they can be triggered
 import './events';

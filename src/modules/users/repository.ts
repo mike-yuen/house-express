@@ -1,8 +1,7 @@
 import { Service, Inject } from 'typedi';
-import { randomBytes } from 'crypto';
-import argon2 from 'argon2';
-import { IUserOutputDTO, IUserInputDTO } from './interface';
+import { IUserOutputDTO, IUserInputDTO, IUser } from './interface';
 import { Logger } from 'winston';
+import { FilterQuery, QueryFindBaseOptions } from 'mongoose';
 
 @Service()
 export default class UserRepository {
@@ -12,25 +11,16 @@ export default class UserRepository {
     @Inject('logger') private logger: Logger,
   ) {}
 
-  public SignUp = async (userInputDTO: IUserInputDTO): Promise<IUserOutputDTO> => {
+  public create = async (userInputDTO: IUserInputDTO): Promise<IUserOutputDTO> => {
     try {
-      const salt = randomBytes(32);
-      const hashedPassword = await argon2.hash(userInputDTO.password, { salt });
-      const userRecord = await this.userModel.create({
-        ...userInputDTO,
-        salt: salt.toString('hex'),
-        password: hashedPassword,
-      });
-      this.logger.info('Creating user db record', userInputDTO.username);
+      const userRecord = await this.userModel.create(userInputDTO);
 
+      this.logger.info('Creating user db record', userInputDTO.username);
       if (!userRecord) {
         throw new Error('User cannot be created');
       }
 
       const user = userRecord.toObject();
-      Reflect.deleteProperty(user, 'password');
-      Reflect.deleteProperty(user, 'salt');
-
       return user;
     } catch (e) {
       this.logger.error(e);
@@ -38,25 +28,22 @@ export default class UserRepository {
     }
   };
 
-  public SignIn = async (email: string, password: string): Promise<IUserOutputDTO> => {
-    const userRecord = await this.userModel.findOne({ email });
-    if (!userRecord) {
-      throw new Error('User not registered');
-    }
-    /* We use verify from argon2 to prevent 'timing based' attacks */
-    this.logger.silly('Checking password');
-    const validPassword = await argon2.verify(userRecord.password, password);
-    if (validPassword) {
-      this.logger.silly('Password is valid!');
-      this.logger.silly('Generating JWT');
-
+  public findOne = async (
+    condition?: FilterQuery<IUser>,
+    projection?: any,
+    options?: QueryFindBaseOptions,
+    callback?: () => void,
+  ): Promise<IUserOutputDTO> => {
+    try {
+      const userRecord = await this.userModel.findOne(condition, projection, options, callback);
+      if (!userRecord) {
+        throw new Error('User not registered');
+      }
       const user = userRecord.toObject();
-      Reflect.deleteProperty(user, 'password');
-      Reflect.deleteProperty(user, 'salt');
-
       return user;
-    } else {
-      throw new Error('Invalid Password');
+    } catch (e) {
+      this.logger.error(e);
+      throw e;
     }
   };
 }

@@ -1,6 +1,6 @@
 import { Container } from 'typedi';
 import LoggerInstance from '@/utils/logger';
-import agendaFactory from './agenda';
+import agendaFactory from '../jobScheduler/agenda';
 // import config from '../config';
 // import mailgun from 'mailgun-js';
 

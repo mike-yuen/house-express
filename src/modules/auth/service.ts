@@ -1,10 +1,12 @@
 import { Service, Inject } from 'typedi';
 import jwt from 'jsonwebtoken';
+import { randomBytes } from 'crypto';
+import argon2 from 'argon2';
 // import MailerService from './mailer';
 import config from '@/config';
 import { IUserOutputDTO, IUserInputDTO } from '@/modules/users/interface';
 import { EventDispatcher, EventDispatcherInterface } from '@/utils/decorators/eventDispatcher';
-import events from '@/modules/users/subscribers/events';
+import events from '@/modules/users/events/eventNames';
 import UserRepository from '@/modules/users/repository';
 import { Logger } from 'winston';
 
@@ -19,8 +21,16 @@ export default class AuthService {
 
   public SignUp = async (userInputDTO: IUserInputDTO): Promise<{ user: IUserOutputDTO; token: string }> => {
     try {
-      const user = await this.userRepository.SignUp(userInputDTO);
+      const salt = randomBytes(32);
+      const hashedPassword = await argon2.hash(userInputDTO.password, { salt });
+      const user = await this.userRepository.create({
+        ...userInputDTO,
+        salt: salt.toString('hex'),
+        password: hashedPassword,
+      });
       const token = this.generateToken(user);
+      Reflect.deleteProperty(user, 'password');
+      Reflect.deleteProperty(user, 'salt');
       // this.logger.silly('Sending welcome email');
       // await this.mailer.SendWelcomeEmail(userRecord);
       this.eventDispatcher.dispatch(events.user.signUp, { user });
@@ -34,9 +44,23 @@ export default class AuthService {
 
   public SignIn = async (email: string, password: string): Promise<{ user: IUserOutputDTO; token: string }> => {
     try {
-      const user = await this.userRepository.SignIn(email, password);
-      const token = this.generateToken(user);
-      return { user, token };
+      const user = await this.userRepository.findOne({ email });
+
+      /* We use verify from argon2 to prevent 'timing based' attacks */
+      this.logger.silly('Checking password');
+      const validPassword = await argon2.verify(user.password, password);
+
+      if (validPassword) {
+        this.logger.silly('Password is valid!');
+        this.logger.silly('Generating JWT');
+        const token = this.generateToken(user);
+
+        Reflect.deleteProperty(user, 'password');
+        Reflect.deleteProperty(user, 'salt');
+        return { user, token };
+      } else {
+        throw new Error('Invalid Password');
+      }
     } catch (e) {
       this.logger.error(e);
       throw e;

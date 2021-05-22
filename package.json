@@ -6,14 +6,11 @@
   "license": "MIT",
   "main": "src/app.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && cp ./.env ./build",
     "start": "nodemon",
     "inspect": "nodemon --inspect src/app.ts",
     "test": "jest",
     "lint": "eslint --ignore-path .gitignore --ext .ts src/ --fix"
-  },
-  "_moduleAliases": {
-    "@": "./build"
   },
   "dependencies": {
     "agenda": "3.1.0",

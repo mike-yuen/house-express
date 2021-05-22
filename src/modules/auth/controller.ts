@@ -8,8 +8,8 @@ import AuthService from './service';
 export default class AuthController {
   constructor(
     // @Injection
-    private readonly authService: AuthService,
     @Inject('logger') private logger: Logger,
+    private readonly authService: AuthService,
   ) {}
 
   public SignUp = async (req: Request, res: Response, next: NextFunction) => {

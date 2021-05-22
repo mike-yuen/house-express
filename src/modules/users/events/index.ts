@@ -1,6 +1,6 @@
 import { Container } from 'typedi';
 import { EventSubscriber, On } from 'event-dispatch';
-import events from './events';
+import events from './eventNames';
 import { IUser } from '@/modules/users/interface';
 import mongoose from 'mongoose';
 import { Logger } from 'winston';
