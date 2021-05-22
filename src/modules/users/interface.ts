@@ -1,8 +1,7 @@
 export interface IUser {
-  _id: string;
+  readonly _id: string;
   username: string;
-  firstName?: string;
-  lastName?: string;
+  displayName?: string;
   email: string;
   password: string;
   salt: string;
@@ -18,19 +17,20 @@ export interface IUser {
 
 export interface IUserInputDTO {
   username: string;
-  firstName?: string;
-  lastName?: string;
+  displayName?: string;
   email: string;
   password: string;
+  salt: string;
   role: string;
 }
 
 export interface IUserOutputDTO {
-  id: string;
+  readonly id: string;
   username: string;
-  firstName?: string;
-  lastName?: string;
+  displayName?: string;
   email: string;
+  password?: string;
+  salt?: string;
   role: string;
 
   lastLogin?: Date;
@@ -41,7 +41,7 @@ export interface IUserOutputDTO {
   isTwoFactorVerified?: boolean;
 }
 
-export enum UserRole {
+export enum UserRoles {
   SUPER_ADMIN = 'superAdmin',
   ADMIN = 'admin',
   USER = 'user',

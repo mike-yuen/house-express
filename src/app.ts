@@ -1,4 +1,8 @@
-import 'module-alias/register';
+import moduleAlias from 'module-alias';
+moduleAlias.addAliases({
+  '@': `${__dirname}`,
+});
+
 import 'reflect-metadata'; // We need this in order to use @Decorators
 import express from 'express';
 
