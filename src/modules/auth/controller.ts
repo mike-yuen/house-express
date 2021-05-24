@@ -1,7 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { Service, Inject } from 'typedi';
 import { Logger } from 'winston';
+
 import { IUserInputDTO } from '@/modules/users/interface';
+import { CreateSuccessResponse, SuccessResponse } from '@/utils/responseHandler/httpResponse';
 import AuthService from './service';
 
 @Service()
@@ -15,9 +17,8 @@ export default class AuthController {
   public SignUp = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { user, token } = await this.authService.SignUp(req.body as IUserInputDTO);
-      return res.status(201).json({ user, token });
+      return new CreateSuccessResponse({ user, token }).send(res);
     } catch (e) {
-      this.logger.error('🔥 error: %o', e);
       return next(e);
     }
   };
@@ -26,9 +27,8 @@ export default class AuthController {
     try {
       const { email, password } = req.body;
       const { user, token } = await this.authService.SignIn(email, password);
-      return res.status(200).json({ user, token });
+      return new SuccessResponse({ user, token }).send(res);
     } catch (e) {
-      this.logger.error('🔥 error: %o', e);
       return next(e);
     }
   };

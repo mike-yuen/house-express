@@ -1,5 +1,6 @@
-import { IUser, UserRoles } from './interface';
 import mongoose from 'mongoose';
+
+import { IUser, UserRoles } from './interface';
 
 const transform = (doc: mongoose.Document, ret: any) => {
   ret.id = ret._id.toString();
@@ -55,6 +56,6 @@ const UserSchema = new mongoose.Schema(
   },
 );
 
-const UserModel = mongoose.model<IUser & mongoose.Document>('Users', UserSchema, 'users');
+const UserModel = mongoose.model<IUser & mongoose.Document>('User', UserSchema, 'users');
 
 export default UserModel;
