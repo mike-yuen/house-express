@@ -1,8 +1,9 @@
 import { Router } from 'express';
 import { Container } from 'typedi';
+
 import middlewares from './middlewares';
-import * as userSchema from './validator';
 import AuthController from './controller';
+import * as userSchema from './validator';
 
 const route = Router();
 

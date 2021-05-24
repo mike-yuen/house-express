@@ -1,7 +1,9 @@
-import { Service, Inject } from 'typedi';
-import { IUserOutputDTO, IUserInputDTO, IUser } from './interface';
-import { Logger } from 'winston';
 import { FilterQuery, QueryFindBaseOptions } from 'mongoose';
+import { Service, Inject } from 'typedi';
+import { Logger } from 'winston';
+
+import { UnprocessableEntityResponse } from '@/utils/responseHandler/httpResponse';
+import { IUserOutputDTO, IUserInputDTO, IUser } from './interface';
 
 @Service()
 export default class UserRepository {
@@ -15,16 +17,14 @@ export default class UserRepository {
     try {
       const userRecord = await this.userModel.create(userInputDTO);
 
-      this.logger.info('Creating user db record', userInputDTO.username);
       if (!userRecord) {
-        throw new Error('User cannot be created');
+        throw new UnprocessableEntityResponse('User cannot be created');
       }
 
       const user = userRecord.toObject();
       return user;
     } catch (e) {
-      this.logger.error(e);
-      throw e;
+      throw new UnprocessableEntityResponse(e.message);
     }
   };
 
@@ -37,13 +37,12 @@ export default class UserRepository {
     try {
       const userRecord = await this.userModel.findOne(condition, projection, options, callback);
       if (!userRecord) {
-        throw new Error('User not registered');
+        throw new UnprocessableEntityResponse('We couldn’t find an account matching the account you entered.');
       }
       const user = userRecord.toObject();
       return user;
     } catch (e) {
-      this.logger.error(e);
-      throw e;
+      throw new UnprocessableEntityResponse(e.message);
     }
   };
 }

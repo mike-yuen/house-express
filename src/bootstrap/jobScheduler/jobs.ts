@@ -1,6 +1,7 @@
+import Agenda from 'agenda';
+
 import config from '@/config';
 import EmailSequenceJob from '@/modules/mailer/jobs/emailSequence';
-import Agenda from 'agenda';
 
 export default ({ agenda }: { agenda: Agenda }) => {
   agenda.define(

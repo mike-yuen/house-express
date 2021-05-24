@@ -1,4 +1,5 @@
 import { Service, Inject } from 'typedi';
+
 import { IUser } from '@/modules/users/interface';
 
 @Service()

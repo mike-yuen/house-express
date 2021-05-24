@@ -1,14 +1,15 @@
-import { Service, Inject } from 'typedi';
-import jwt from 'jsonwebtoken';
-import { randomBytes } from 'crypto';
 import argon2 from 'argon2';
+import { randomBytes } from 'crypto';
+import jwt from 'jsonwebtoken';
+import { Service, Inject } from 'typedi';
+import { Logger } from 'winston';
 // import MailerService from './mailer';
 import config from '@/config';
-import { IUserOutputDTO, IUserInputDTO } from '@/modules/users/interface';
-import { EventDispatcher, EventDispatcherInterface } from '@/utils/decorators/eventDispatcher';
 import events from '@/modules/users/events/eventNames';
+import { IUserOutputDTO, IUserInputDTO } from '@/modules/users/interface';
 import UserRepository from '@/modules/users/repository';
-import { Logger } from 'winston';
+import { EventDispatcher, EventDispatcherInterface } from '@/utils/decorators/eventDispatcher';
+import { NotFoundResponse } from '@/utils/responseHandler/httpResponse';
 
 @Service()
 export default class AuthService {
@@ -37,7 +38,6 @@ export default class AuthService {
 
       return { user, token };
     } catch (e) {
-      this.logger.error('🔥 error %o', e);
       throw e;
     }
   };
@@ -59,10 +59,9 @@ export default class AuthService {
         Reflect.deleteProperty(user, 'salt');
         return { user, token };
       } else {
-        throw new Error('Invalid Password');
+        throw new NotFoundResponse('Invalid Password! Please check your password and try again.');
       }
     } catch (e) {
-      this.logger.error(e);
       throw e;
     }
   };

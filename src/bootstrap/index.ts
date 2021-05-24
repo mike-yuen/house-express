@@ -1,11 +1,13 @@
 import expressLoader from './express';
-import dependencyInjectorLoader from './dependencyInjector';
-import mongooseLoader from './database/mongoose';
-import jobsLoader from './jobScheduler/jobs';
+
+import UserModel from '@/modules/users/model';
 import Logger from '@/utils/logger';
+
+import mongooseLoader from './database/mongoose';
+import dependencyInjectorLoader from './dependencyInjector';
 //We have to import at least all the events once so they can be triggered
 import './events';
-import UserModel from '@/modules/users/model';
+import jobsLoader from './jobScheduler/jobs';
 
 const bootstrap = async ({ expressApp }) => {
   const mongoConnection = await mongooseLoader();

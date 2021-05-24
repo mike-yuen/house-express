@@ -1,9 +1,10 @@
-import { Container } from 'typedi';
-import { EventSubscriber, On } from 'event-dispatch';
-import events from './eventNames';
-import { IUser } from '@/modules/users/interface';
 import mongoose from 'mongoose';
+import { EventSubscriber, On } from 'event-dispatch';
+import { Container } from 'typedi';
 import { Logger } from 'winston';
+
+import { IUser } from '@/modules/users/interface';
+import events from './eventNames';
 
 @EventSubscriber()
 export default class UserSubscriber {
@@ -11,7 +12,7 @@ export default class UserSubscriber {
    * A great example of an event that you want to handle
    * save the last time a user signin, your boss will be pleased.
    *
-   * Altough it works in this tiny toy API, please don't do this for a production product
+   * Although it works in this tiny toy API, please don't do this for a production product
    * just spamming insert/update to mongo will kill it eventualy
    *
    * Use another approach like emit events to a queue (rabbitmq/aws sqs),
