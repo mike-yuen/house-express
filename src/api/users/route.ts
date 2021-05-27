@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 
-import middlewares from '@/modules/auth/middlewares';
+import middlewares from '@/api/auth/middlewares';
 import { SuccessResponse } from '@/utils/responseHandler/httpResponse';
 
 const route = Router();

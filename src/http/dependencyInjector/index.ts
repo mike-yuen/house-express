@@ -1,6 +1,6 @@
 import { Container } from 'typedi';
 
-import agendaFactory from '@/bootstrap/jobScheduler/agenda';
+import agendaFactory from '@/http/jobScheduler/agenda';
 import LoggerInstance from '@/utils/logger';
 // import config from '../config';
 // import mailgun from 'mailgun-js';

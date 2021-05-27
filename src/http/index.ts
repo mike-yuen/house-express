@@ -1,15 +1,15 @@
 import expressLoader from './express';
 
-import UserModel from '@/modules/users/model';
+import UserModel from '@/api/users/model';
+import mongooseLoader from '@/http/database/mongoose';
 import Logger from '@/utils/logger';
 
-import mongooseLoader from './database/mongoose';
 import dependencyInjectorLoader from './dependencyInjector';
 //We have to import at least all the events once so they can be triggered
 import './events';
 import jobsLoader from './jobScheduler/jobs';
 
-const bootstrap = async ({ expressApp }) => {
+const http = async ({ expressApp }) => {
   const mongoConnection = await mongooseLoader();
   Logger.info('✌️ DB loaded and connected!');
 
@@ -44,4 +44,4 @@ const bootstrap = async ({ expressApp }) => {
   Logger.info('✌️ Express loaded');
 };
 
-export default bootstrap;
+export default http;
