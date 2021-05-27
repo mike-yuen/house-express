@@ -16,6 +16,9 @@ export default (app: Router) => {
   // @POST: /signin
   route.post('/signin', userSchema.SignInSchema, authController.SignIn);
 
+  // @POST: /signout
+  route.post('/signout', authController.SignOut);
+
   // /**
   //  * @TODO Let's leave this as a place holder for now
   //  * The reason for a logout route could be deleting a 'push notification token'

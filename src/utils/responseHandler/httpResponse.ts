@@ -20,6 +20,7 @@ export abstract class HttpResponse {
   }
 }
 
+// 200
 export class SuccessResponse<T> extends HttpResponse {
   constructor(private data: T) {
     super(HttpStatusCode.SUCCESS);
@@ -30,6 +31,7 @@ export class SuccessResponse<T> extends HttpResponse {
   }
 }
 
+// 201
 export class CreateSuccessResponse<T> extends HttpResponse {
   constructor(private data: T) {
     super(HttpStatusCode.CREATED_SUCCESS);
@@ -40,6 +42,18 @@ export class CreateSuccessResponse<T> extends HttpResponse {
   }
 }
 
+// 401
+export class UnauthorizedResponse<T> extends HttpResponse {
+  constructor(message = 'No authorization token was found', private errors?: T) {
+    super(HttpStatusCode.UNAUTHORIZED, message);
+  }
+
+  send(res: Response): Response {
+    return super.prepare<UnauthorizedResponse<T>>(res, this);
+  }
+}
+
+// 404
 export class NotFoundResponse<T> extends HttpResponse {
   constructor(message = 'Bad Request', private errors?: T) {
     super(HttpStatusCode.NOT_FOUND, message);
@@ -50,12 +64,14 @@ export class NotFoundResponse<T> extends HttpResponse {
   }
 }
 
+// 422
 export class UnprocessableEntityResponse extends HttpResponse {
   constructor(message = 'Unprocessable Entity') {
     super(HttpStatusCode.UNPROCESSABLE_ENTITY, message);
   }
 }
 
+// 500
 export class InternalErrorResponse extends HttpResponse {
   constructor(message = 'Internal Server Error') {
     super(HttpStatusCode.INTERNAL_SERVER, message);

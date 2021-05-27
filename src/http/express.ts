@@ -1,4 +1,5 @@
 import express, { NextFunction, Request, Response } from 'express';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
 import config from '@/config';
@@ -35,6 +36,8 @@ export default ({ app }: { app: express.Application }) => {
   // Middleware that transforms the raw string of req.body into json
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+
+  app.use(cookieParser());
 
   // Load API routes
   app.use(config.api.prefix, routes());
