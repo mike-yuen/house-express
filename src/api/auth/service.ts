@@ -1,9 +1,10 @@
 import argon2 from 'argon2';
 import { randomBytes } from 'crypto';
 import jwt from 'jsonwebtoken';
+import randtoken from 'rand-token';
 import { Service, Inject } from 'typedi';
 import { Logger } from 'winston';
-// import MailerService from './mailer';
+
 import config from '@/config';
 import events from '@/api/users/events/eventNames';
 import { IUserOutputDTO, IUserInputDTO } from '@/api/users/interface';
@@ -11,6 +12,7 @@ import UserRepository from '@/api/users/repository';
 import { EventDispatcher, EventDispatcherInterface } from '@/utils/decorators/eventDispatcher';
 import { NotFoundResponse } from '@/utils/responseHandler/httpResponse';
 
+// import MailerService from './mailer';
 @Service()
 export default class AuthService {
   constructor(
@@ -19,6 +21,19 @@ export default class AuthService {
     @Inject('logger') private logger: Logger,
     @EventDispatcher() private eventDispatcher: EventDispatcherInterface,
   ) {}
+
+  private generateToken = user => {
+    this.logger.silly(`Sign JWT for userId: ${user._id}`);
+    return jwt.sign(
+      {
+        id: user.id, // We are gonna use this in the middleware 'isAuth'
+        role: user.role,
+        username: user.username,
+      },
+      config.jwtSecret,
+      { expiresIn: '1d' },
+    );
+  };
 
   public SignUp = async (userInputDTO: IUserInputDTO): Promise<{ user: IUserOutputDTO; token: string }> => {
     try {
@@ -29,6 +44,7 @@ export default class AuthService {
         salt: salt.toString('hex'),
         password: hashedPassword,
       });
+
       const token = this.generateToken(user);
       Reflect.deleteProperty(user, 'password');
       Reflect.deleteProperty(user, 'salt');
@@ -42,7 +58,10 @@ export default class AuthService {
     }
   };
 
-  public SignIn = async (email: string, password: string): Promise<{ user: IUserOutputDTO; token: string }> => {
+  public SignIn = async (
+    email: string,
+    password: string,
+  ): Promise<{ user: IUserOutputDTO; token: string; refreshToken: string }> => {
     try {
       const user = await this.userRepository.findOne({ email });
 
@@ -54,31 +73,16 @@ export default class AuthService {
         this.logger.silly('Password is valid!');
         this.logger.silly('Generating JWT');
         const token = this.generateToken(user);
+        const refreshToken = randtoken.uid(256);
 
         Reflect.deleteProperty(user, 'password');
         Reflect.deleteProperty(user, 'salt');
-        return { user, token };
+        return { user, token, refreshToken };
       } else {
         throw new NotFoundResponse('Invalid Password! Please check your password and try again.');
       }
     } catch (e) {
       throw e;
     }
-  };
-
-  private generateToken = user => {
-    const today = new Date();
-    const exp = new Date(today);
-    exp.setDate(today.getDate() + 60);
-    this.logger.silly(`Sign JWT for userId: ${user._id}`);
-    return jwt.sign(
-      {
-        id: user.id, // We are gonna use this in the middleware 'isAuth'
-        role: user.role,
-        username: user.username,
-        exp: exp.getTime() / 1000,
-      },
-      config.jwtSecret,
-    );
   };
 }

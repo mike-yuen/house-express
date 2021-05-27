@@ -50,12 +50,18 @@ export default {
     user: 'agendash',
     password: '123456',
   },
+
   /**
    * API configs
    */
   api: {
     prefix: '/api',
   },
+
+  redis: {
+    uri: process.env.REDIS_URI || 'localhost:6379',
+  },
+
   /**
    * Mailgun email credentials
    */
