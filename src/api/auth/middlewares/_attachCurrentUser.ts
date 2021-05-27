@@ -2,7 +2,7 @@ import { Container } from 'typedi';
 import mongoose from 'mongoose';
 import { Logger } from 'winston';
 
-import { IUser } from '@/modules/users/interface';
+import { IUser } from '@/api/users/interface';
 
 const attachCurrentUser = async (req, res, next) => {
   const Logger: Logger = Container.get('logger');

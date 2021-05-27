@@ -5,9 +5,9 @@ import { Service, Inject } from 'typedi';
 import { Logger } from 'winston';
 // import MailerService from './mailer';
 import config from '@/config';
-import events from '@/modules/users/events/eventNames';
-import { IUserOutputDTO, IUserInputDTO } from '@/modules/users/interface';
-import UserRepository from '@/modules/users/repository';
+import events from '@/api/users/events/eventNames';
+import { IUserOutputDTO, IUserInputDTO } from '@/api/users/interface';
+import UserRepository from '@/api/users/repository';
 import { EventDispatcher, EventDispatcherInterface } from '@/utils/decorators/eventDispatcher';
 import { NotFoundResponse } from '@/utils/responseHandler/httpResponse';
 

@@ -6,7 +6,7 @@ moduleAlias.addAliases({
 import 'reflect-metadata'; // We need this in order to use @Decorators
 import express from 'express';
 
-import bootstrap from '@/bootstrap';
+import http from '@/http';
 import config from '@/config';
 import Logger from '@/utils/logger';
 
@@ -18,7 +18,7 @@ async function startServer() {
    * Well, at least in node 10 without babel and at the time of writing
    * So we are using good old require.
    **/
-  await bootstrap({ expressApp: app });
+  await http({ expressApp: app });
   app
     .listen(config.port, () => {
       Logger.info(`

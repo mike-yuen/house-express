@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { Service, Inject } from 'typedi';
 import { Logger } from 'winston';
 
-import { IUserInputDTO } from '@/modules/users/interface';
+import { IUserInputDTO } from '@/api/users/interface';
 import { CreateSuccessResponse, SuccessResponse } from '@/utils/responseHandler/httpResponse';
 import AuthService from './service';
 
