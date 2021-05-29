@@ -1,6 +1,6 @@
 import expressLoader from './express';
 
-import UserModel from '@/api/users/model';
+import UserModel from '@/api/users/models';
 import mongooseLoader from '@/http/database/mongoose';
 import Logger from '@/utils/logger';
 

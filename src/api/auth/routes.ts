@@ -1,15 +1,17 @@
 import { Router } from 'express';
 import { Container } from 'typedi';
 
-import middlewares from './middlewares';
-import AuthController from './controller';
-import * as userSchema from './validator';
+import AuthController from './controllers';
+import AuthMiddleware from './middewares';
+import * as userSchema from './validators';
 
 const route = Router();
 
 export default (app: Router) => {
   app.use('/auth', route);
   const authController: AuthController = Container.get(AuthController);
+  const authMiddleware: AuthMiddleware = Container.get(AuthMiddleware);
+
   // @POST: /signup
   route.post('/signup', userSchema.SignUpSchema, authController.SignUp);
 
@@ -17,7 +19,7 @@ export default (app: Router) => {
   route.post('/signin', userSchema.SignInSchema, authController.SignIn);
 
   // @POST: /signout
-  route.post('/signout', authController.SignOut);
+  route.post('/signout', authMiddleware.getToken, authController.SignOut);
 
   // /**
   //  * @TODO Let's leave this as a place holder for now

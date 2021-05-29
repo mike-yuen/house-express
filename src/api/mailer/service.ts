@@ -1,6 +1,6 @@
 import { Service, Inject } from 'typedi';
 
-import { IUser } from '@/api/users/interface';
+import { IUser } from '@/api/users/interfaces';
 
 @Service()
 export default class MailerService {

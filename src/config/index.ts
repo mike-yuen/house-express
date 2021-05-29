@@ -44,7 +44,7 @@ export default {
   },
 
   /**
-   * Agendash config
+   * Agendash configs
    */
   agendash: {
     user: 'agendash',
@@ -58,8 +58,14 @@ export default {
     prefix: '/api',
   },
 
+  /**
+   * Redis configs
+   */
   redis: {
-    uri: process.env.REDIS_URI || 'localhost:6379',
+    host: process.env.REDIS_HOST || 'localhost',
+    port: process.env.REDIS_PORT || 6379,
+    username: process.env.REDIS_USERNAME || null,
+    password: process.env.REDIS_PASSWORD || null,
   },
 
   /**

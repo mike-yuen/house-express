@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-import { IUser, UserRoles } from './interface';
+import { IUser, UserRoles } from './interfaces';
 
 const transform = (doc: mongoose.Document, ret: any) => {
   ret.id = ret._id.toString();

@@ -3,7 +3,7 @@ import { Service, Inject } from 'typedi';
 import { Logger } from 'winston';
 
 import { UnprocessableEntityResponse } from '@/utils/responseHandler/httpResponse';
-import { IUserOutputDTO, IUserInputDTO, IUser } from './interface';
+import { IUserOutputDTO, IUserInputDTO, IUser } from './interfaces';
 
 @Service()
 export default class UserRepository {

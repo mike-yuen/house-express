@@ -1,5 +1,5 @@
 import { Document, Model } from 'mongoose';
-import { IUser } from '@/api/users/interface';
+import { IUser } from '@/api/users/interfaces';
 declare global {
   namespace Express {
     export interface Request {
