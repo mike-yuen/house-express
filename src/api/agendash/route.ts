@@ -9,7 +9,7 @@ export default (app: Router) => {
   const agendaInstance = Container.get('agendaInstance');
 
   app.use(
-    '/dash',
+    '/agendash',
     basicAuth({
       users: {
         [config.agendash.user]: config.agendash.password,

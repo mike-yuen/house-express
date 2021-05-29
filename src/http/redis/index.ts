@@ -127,6 +127,16 @@ export default class RedisService implements RedisServiceInterface {
     }
   }
 
+  async deleteValueInArray(key: string, value: string): Promise<boolean> {
+    try {
+      await this.redis.lrem(key, 0, value);
+      return true;
+    } catch (err) {
+      Logger.error(`Error while delete value: ${value} from ${key} in redis`, err);
+      return Promise.reject(err);
+    }
+  }
+
   async cache(key: string, data: any): Promise<boolean> {
     if (isObject(data)) {
       data = JSON.stringify(data);

@@ -26,16 +26,31 @@ export default class AuthService {
     @EventDispatcher() private eventDispatcher: EventDispatcherInterface,
   ) {}
 
+  private redisKey = (userId: string) => {
+    return `user:${userId}:${REDIS_SUFFIX.refreshToken}`;
+  };
+
   private generateToken = user => {
     this.logger.silly(`Sign JWT for userId: ${user._id}`);
     return jwt.sign(
       {
-        id: user.id, // We are gonna use this in the middleware 'isAuth'
-        role: user.role,
+        id: user.id, // Will use this in the middleware 'getToken'
         username: user.username,
       },
       config.jwtSecret,
-      { expiresIn: '15m' },
+      { expiresIn: '1d' },
+    );
+  };
+
+  private generateRefreshToken = (user, key: string) => {
+    this.logger.silly(`Generate refresh token JWT for userId: ${user._id}`);
+    return jwt.sign(
+      {
+        id: user.id,
+        refreshKey: key,
+      },
+      config.jwtSecret,
+      { expiresIn: '7d' },
     );
   };
 
@@ -77,15 +92,53 @@ export default class AuthService {
         this.logger.silly('Password is valid!');
         this.logger.silly('Generating JWT');
         const token = this.generateToken(user);
-        const refreshToken = randtoken.uid(256);
 
-        await this.redis.setArray(`${user.id}:${REDIS_SUFFIX.refreshToken}`, [refreshToken]);
+        const refreshKey = randtoken.uid(256);
+        await this.redis.setArray(this.redisKey(user.id), [refreshKey]);
+
+        const refreshToken = this.generateRefreshToken(user, refreshKey);
 
         Reflect.deleteProperty(user, 'password');
         Reflect.deleteProperty(user, 'salt');
         return { user, token, refreshToken };
       } else {
         throw new NotFoundResponse('Invalid Password! Please check your password and try again.');
+      }
+    } catch (e) {
+      throw e;
+    }
+  };
+
+  public RefreshToken = async (currentRefreshToken): Promise<{ token: string; refreshToken: string }> => {
+    try {
+      const refreshKeyList = await this.redis.getArray(this.redisKey(currentRefreshToken.id));
+
+      if (refreshKeyList.includes(currentRefreshToken.refreshKey)) {
+        const user = await this.userRepository.findOne({ _id: currentRefreshToken.id });
+
+        const token = this.generateToken(user);
+        const refreshKey = randtoken.uid(256);
+
+        await this.redis.deleteValueInArray(this.redisKey(user.id), currentRefreshToken.refreshKey);
+        await this.redis.setArray(this.redisKey(user.id), [refreshKey]);
+
+        const refreshToken = this.generateRefreshToken(user, refreshKey);
+
+        return { token, refreshToken };
+      } else {
+        throw new NotFoundResponse('Refresh token not existing! Please check your token and try again.');
+      }
+    } catch (e) {
+      throw e;
+    }
+  };
+
+  public SignOut = async (currentRefreshToken, options): Promise<void> => {
+    try {
+      if (options.flushAll) {
+        await this.redis.delete(this.redisKey(currentRefreshToken.id));
+      } else {
+        await this.redis.deleteValueInArray(this.redisKey(currentRefreshToken.id), currentRefreshToken.refreshKey);
       }
     } catch (e) {
       throw e;

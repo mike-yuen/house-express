@@ -20,10 +20,6 @@ export default class UserService {
   public getUserById = async (userId: string): Promise<{ user: IUserOutputDTO }> => {
     try {
       const user = await this.userRepository.findOne({ _id: userId });
-
-      const values = await this.redis.getArray(`${user.id}:${REDIS_SUFFIX.refreshToken}`);
-      console.log('_____', values);
-
       Reflect.deleteProperty(user, 'password');
       Reflect.deleteProperty(user, 'salt');
 
