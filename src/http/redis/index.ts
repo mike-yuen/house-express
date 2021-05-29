@@ -8,20 +8,22 @@ import map from 'lodash/map';
 
 import Logger from '@/utils/logger';
 
-import { RedisInstance } from './instance';
+import { RedisConnection } from './connection';
 import RedisServiceInterface from './interface';
 
 export default class RedisService implements RedisServiceInterface {
-  redis: Redis.Redis;
-  expiryTime = -1; // seconds
   constructor(expiryTime?: number) {
     if (!isUndefined(expiryTime) && expiryTime > 0) {
       this.expiryTime = expiryTime;
     }
-    this.redis = RedisInstance;
+    this.redis = RedisConnection;
   }
 
-  async push(key: string, list: Array<any>, override = false): Promise<boolean> {
+  private redis: Redis.Redis;
+
+  private expiryTime = -1; // seconds
+
+  async setArray(key: string, list: Array<any>, override = false): Promise<boolean> {
     try {
       if (override) {
         await this.redis.del(key);
@@ -94,7 +96,7 @@ export default class RedisService implements RedisServiceInterface {
     }
   }
 
-  async get(key: string, toObject = false): Promise<Array<any>> {
+  async getArray(key: string, toObject = false): Promise<Array<any>> {
     try {
       let list: Array<any> = [];
       const data: Array<string> = await this.redis.lrange(key, 0, -1);
@@ -138,7 +140,7 @@ export default class RedisService implements RedisServiceInterface {
     }
   }
 
-  async getCache(key: string): Promise<any> {
+  async getCached(key: string): Promise<any> {
     try {
       return await this.redis.smembers(key);
     } catch (e) {
@@ -147,7 +149,7 @@ export default class RedisService implements RedisServiceInterface {
     }
   }
 
-  async deleteCache(key: string, members: any[]): Promise<any> {
+  async deleteCached(key: string, members: any[]): Promise<any> {
     try {
       return await this.redis.srem(key, members);
     } catch (e) {

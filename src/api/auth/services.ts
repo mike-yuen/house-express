@@ -7,18 +7,22 @@ import { Logger } from 'winston';
 
 import config from '@/config';
 import events from '@/api/users/events/eventNames';
-import { IUserOutputDTO, IUserInputDTO } from '@/api/users/interface';
-import UserRepository from '@/api/users/repository';
+import { IUserOutputDTO, IUserInputDTO } from '@/api/users/interfaces';
+import UserRepository from '@/api/users/repositories';
+import RedisService from '@/http/redis';
 import { EventDispatcher, EventDispatcherInterface } from '@/utils/decorators/eventDispatcher';
 import { NotFoundResponse } from '@/utils/responseHandler/httpResponse';
 
+import { REDIS_SUFFIX } from './constants';
 // import MailerService from './mailer';
+
 @Service()
 export default class AuthService {
   constructor(
     // private mailer: MailerService,
     private readonly userRepository: UserRepository,
     @Inject('logger') private logger: Logger,
+    @Inject('redis') private redis: RedisService,
     @EventDispatcher() private eventDispatcher: EventDispatcherInterface,
   ) {}
 
@@ -31,7 +35,7 @@ export default class AuthService {
         username: user.username,
       },
       config.jwtSecret,
-      { expiresIn: '1d' },
+      { expiresIn: '15m' },
     );
   };
 
@@ -74,6 +78,8 @@ export default class AuthService {
         this.logger.silly('Generating JWT');
         const token = this.generateToken(user);
         const refreshToken = randtoken.uid(256);
+
+        await this.redis.setArray(`${user.id}:${REDIS_SUFFIX.refreshToken}`, [refreshToken]);
 
         Reflect.deleteProperty(user, 'password');
         Reflect.deleteProperty(user, 'salt');

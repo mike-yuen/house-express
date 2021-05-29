@@ -1,18 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
-import { Service, Inject } from 'typedi';
-import { Logger } from 'winston';
+import { Service } from 'typedi';
 
-import { IUserInputDTO } from '@/api/users/interface';
+import { IUserInputDTO } from '@/api/users/interfaces';
 import { CreateSuccessResponse, SuccessResponse } from '@/utils/responseHandler/httpResponse';
-import AuthService from './service';
+
+import { COOKIE_KEY, COOKIE_EXPIRATION } from './constants';
+import AuthService from './services';
 
 @Service()
 export default class AuthController {
-  constructor(
-    // @Injection
-    @Inject('logger') private logger: Logger,
-    private readonly authService: AuthService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   public SignUp = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -30,8 +27,12 @@ export default class AuthController {
 
       return res
         .status(200)
-        .cookie('jt', token, { httpOnly: true })
-        .cookie('rjt', refreshToken, { httpOnly: true })
+        .cookie(COOKIE_KEY.token, token, { httpOnly: true, secure: false, maxAge: COOKIE_EXPIRATION.token })
+        .cookie(COOKIE_KEY.refreshToken, refreshToken, {
+          httpOnly: true,
+          secure: false,
+          maxAge: COOKIE_EXPIRATION.refreshToken,
+        })
         .json({ user });
     } catch (e) {
       return next(e);
@@ -40,7 +41,7 @@ export default class AuthController {
 
   public SignOut = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      res.clearCookie('xs');
+      res.clearCookie(COOKIE_KEY.token);
       return new SuccessResponse('User logged out successfully').send(res);
     } catch (e) {
       return next(e);
