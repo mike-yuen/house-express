@@ -8,9 +8,9 @@ import { UnauthorizedResponse } from '@/utils/responseHandler/httpResponse';
 
 @Service()
 export default class AuthMiddleware {
-  private getTokenFromCookie = (req: Request) => {
-    if (req.cookies && req.cookies[COOKIE_KEY.token]) {
-      return req.cookies[COOKIE_KEY.token];
+  private getTokenFromCookie = (req: Request, tokenType: string) => {
+    if (req.cookies && req.cookies[tokenType]) {
+      return req.cookies[tokenType];
     }
     throw new UnauthorizedResponse();
   };
@@ -19,6 +19,13 @@ export default class AuthMiddleware {
     secret: config.jwtSecret, // The _secret_ to sign the JWTs
     algorithms: [config.jwtAlgorithm], // JWT Algorithm
     userProperty: 'token', // Use req.token to store the JWT
-    getToken: (req: Request) => this.getTokenFromCookie(req), // How to extract the JWT from the request
+    getToken: (req: Request) => this.getTokenFromCookie(req, COOKIE_KEY.token), // How to extract the JWT from the request
+  });
+
+  public getRefreshToken = jwt({
+    secret: config.jwtSecret,
+    algorithms: [config.jwtAlgorithm],
+    userProperty: 'refreshToken',
+    getToken: (req: Request) => this.getTokenFromCookie(req, COOKIE_KEY.refreshToken),
   });
 }

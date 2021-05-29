@@ -9,6 +9,8 @@ export default interface RedisServiceInterface {
 
   delete(key: string): Promise<boolean>;
 
+  deleteValueInArray(key: string, value: string): Promise<boolean>;
+
   cache(key: string, data: any): Promise<boolean>;
 
   getCached(key: string): Promise<any>;
