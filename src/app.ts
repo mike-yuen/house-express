@@ -7,8 +7,8 @@ import 'reflect-metadata'; // We need this in order to use @Decorators
 import express from 'express';
 
 import http from '@/http';
-import config from '@/config';
-import Logger from '@/utils/logger';
+import config from '@/crossCutting/config';
+import Logger from '@/crossCutting/logger';
 
 async function startServer() {
   const app = express();
