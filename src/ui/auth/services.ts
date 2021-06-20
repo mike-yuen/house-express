@@ -6,9 +6,9 @@ import { Service, Inject } from 'typedi';
 import { Logger } from 'winston';
 
 import config from '@/crossCutting/config';
-import events from '@/ui/users/events/eventNames';
-import { IUserOutputDTO, IUserInputDTO } from '@/ui/users/interfaces';
-import UserRepository from '@/ui/users/repositories';
+import events from '@/ui/user/event/eventNames';
+import { IUserOutputDTO, IUserInputDTO } from '@/ui/user/interface';
+import UserRepository from '@/ui/user/repository';
 import RedisService from '@/crossCutting/redis';
 import { EventDispatcher, EventDispatcherInterface } from '@/infrastructure/utils/decorators/eventDispatcher';
 import { NotFoundResponse } from '@/crossCutting/responseHandler/httpResponse';

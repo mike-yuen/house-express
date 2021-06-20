@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { Service } from 'typedi';
 
-import { IUserInputDTO } from '@/ui/users/interfaces';
+import { IUserInputDTO } from '@/ui/user/interface';
 import { CreateSuccessResponse, SuccessResponse } from '@/crossCutting/responseHandler/httpResponse';
 
 import { COOKIE_KEY, COOKIE_EXPIRATION } from './constants';

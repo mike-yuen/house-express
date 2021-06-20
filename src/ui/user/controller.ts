@@ -3,7 +3,7 @@ import { Service, Inject } from 'typedi';
 import { Logger } from 'winston';
 
 import { SuccessResponse } from '@/crossCutting/responseHandler/httpResponse';
-import UserService from './services';
+import UserService from './service';
 
 @Service()
 export default class UserController {

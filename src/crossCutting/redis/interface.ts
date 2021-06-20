@@ -1,4 +1,4 @@
-export default interface RedisServiceInterface {
+export default interface IRedisService {
   setArray(key: string, list: Array<any>, override?: boolean): Promise<any>;
 
   setValue(key: string, value: any, expiryTime?: number): Promise<boolean>;

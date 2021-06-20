@@ -1,5 +1,5 @@
 import { inject } from 'inversify';
 
-import { DECORATOR_IDENTIFIERS } from '@/infrastructure/InfrastructureModuleSymbols';
+import { INFRASTRUCTURE_IDENTIFIERS } from '@/infrastructure/InfrastructureModuleSymbols';
 
-export const eventDispatcher = inject(DECORATOR_IDENTIFIERS.EVENT_DISPATCHER);
+export const eventDispatcher = inject(INFRASTRUCTURE_IDENTIFIERS.EVENT_DISPATCHER);

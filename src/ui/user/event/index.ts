@@ -3,7 +3,7 @@ import { EventSubscriber, On } from 'event-dispatch';
 import { Container } from 'typedi';
 import { Logger } from 'winston';
 
-import { IUser } from '@/ui/users/interfaces';
+import { IUser } from '@/ui/user/interface';
 import events from './eventNames';
 
 @EventSubscriber()

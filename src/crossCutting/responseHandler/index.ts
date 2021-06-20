@@ -1,12 +1,17 @@
 import { NextFunction, Response } from 'express';
-
-import Logger from '@/crossCutting/logger';
-import { HttpResponse, NotFoundResponse } from './httpResponse';
 import { isCelebrateError } from 'celebrate';
 
+import { inject } from '@/infrastructure/ioc';
+import { ILoggerService } from '@/crossCutting/logger/interface';
+import { LoggerService } from '@/crossCutting/logger';
+
+import { HttpResponse, NotFoundResponse } from './httpResponse';
+
 class ResponseHandler {
+  @inject(LoggerService) private readonly logger: ILoggerService;
+
   public async handleError(err: HttpResponse, res: Response): Promise<void> {
-    Logger.error('Error message from error-handler:\n %o', err);
+    this.logger.error('Error message from error-handler:\n %o', err);
     err.send(res);
     // await sendMailToAdminIfCritical();
     // await sendEventsToSentry();
@@ -26,7 +31,7 @@ class ResponseHandler {
       };
     }
 
-    Logger.error('Error message from error-handler:\n %o', errors);
+    this.logger.error('Error message from error-handler:\n %o', errors);
     return new NotFoundResponse(err.message, errors).send(res);
   }
 

@@ -3,7 +3,7 @@ import { Service, Inject } from 'typedi';
 import { Logger } from 'winston';
 
 import { UnprocessableEntityResponse } from '@/crossCutting/responseHandler/httpResponse';
-import { IUserOutputDTO, IUserInputDTO, IUser } from './interfaces';
+import { IUserOutputDTO, IUserInputDTO, IUser } from './interface';
 
 @Service()
 export default class UserRepository {

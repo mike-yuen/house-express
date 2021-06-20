@@ -4,8 +4,8 @@ import { Logger } from 'winston';
 import { REDIS_SUFFIX } from '@/ui/auth/constants';
 import RedisService from '@/crossCutting/redis';
 
-import { IUserOutputDTO } from './interfaces';
-import UserRepository from './repositories';
+import { IUserOutputDTO } from './interface';
+import UserRepository from './repository';
 
 // import MailerService from './mailer';
 @Service()

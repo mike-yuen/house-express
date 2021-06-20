@@ -1,19 +1,18 @@
-import express, { NextFunction, Request, Response } from 'express';
+import express, { Express, NextFunction, Request, Response } from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import swaggerUi from 'swagger-ui-express';
+import helmet from 'helmet';
+// import swaggerUi from 'swagger-ui-express';
 
-import config from '@/crossCutting/config';
+// import config from '@/crossCutting/config';
 import { responseHandler } from '@/crossCutting/responseHandler';
 // const swaggerDoc = require('@/swagger.json');
 
 // import routes from './routes';
 
-export default ({ app }: { app: express.Application }) => {
-  /**
-   * Health Check endpoints
-   * @TODO Explain why they are here
-   */
+export type App = Express;
+
+export default (app: express.Application) => {
   app.get('/status', (req, res) => {
     res.status(200).end();
   });
@@ -25,20 +24,15 @@ export default ({ app }: { app: express.Application }) => {
   // It shows the real origin IP in the heroku or Cloudwatch logs
   app.enable('trust proxy');
 
-  // The magic package that prevents frontend developers going nuts
-  // Alternate description:
   // Enable Cross Origin Resource Sharing to all origins by default
   app.use(cors());
-
-  // Some sauce that always add since 2014
-  // "Lets you use HTTP verbs such as PUT or DELETE in places where the client doesn't support it."
-  // Maybe not needed anymore ?
-
-  // app.use(require('method-override')());
 
   // Middleware that transforms the raw string of req.body into json
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+
+  // Adds some security defaults
+  app.use(helmet());
 
   app.use(cookieParser());
 

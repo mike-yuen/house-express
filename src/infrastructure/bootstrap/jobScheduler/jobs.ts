@@ -1,15 +1,15 @@
 import Agenda from 'agenda';
 
 import config from '@/crossCutting/config';
-import EmailSequenceJob from '@/api/mailer/jobs/emailSequence';
+import EmailSequenceJob from '@/crossCutting/mailer/jobs/emailSequence';
 
-export default ({ agenda }: { agenda: Agenda }) => {
+async function sendWelcomeEmail(agenda: Agenda): Promise<void> {
   agenda.define(
     'send-email',
     { priority: 'high', concurrency: config.agenda.concurrency },
-    // @TODO Could this be a static method? Would it be better?
     new EmailSequenceJob().handler,
   );
+  await agenda.start();
+}
 
-  agenda.start();
-};
+export const jobsLoader = [sendWelcomeEmail];

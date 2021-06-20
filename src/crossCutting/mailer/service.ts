@@ -7,9 +7,6 @@ export default class MailerService {
   constructor(@Inject('emailClient') private emailClient) {}
 
   public async SendWelcomeEmail(email) {
-    /**
-     * @TODO Call Mailchimp/Sendgrid or whatever
-     */
     // Added example for sending mail from mailgun
     const data = {
       from: 'Excited User <me@samples.mailgun.org>',
@@ -21,6 +18,7 @@ export default class MailerService {
     this.emailClient.messages().send(data);
     return { delivered: 1, status: 'ok' };
   }
+
   public StartEmailSequence(sequence: string, user: Partial<User>) {
     if (!user.email) {
       throw new Error('No email provided');

@@ -1,12 +1,16 @@
 import { EventDispatcher } from 'event-dispatch';
 import { ContainerModule } from 'inversify';
 
-import { DECORATOR_IDENTIFIERS } from '@/infrastructure/InfrastructureModuleSymbols';
+import { INFRASTRUCTURE_IDENTIFIERS } from '@/infrastructure/InfrastructureModuleSymbols';
+
+// Models
+import UserModel from '@/infrastructure/database/models/user';
 
 // Controllers
-import '../../ui/api/controllers/auth_controller';
-import '../../ui/api/controllers/tenant_controller';
+// import '@/ui/auth/controllers';
+// import '@/ui/user/controller';
 
 export const referenceDataIoCModule = new ContainerModule(bind => {
-  bind<EventDispatcher>(DECORATOR_IDENTIFIERS.EVENT_DISPATCHER).toConstantValue(new EventDispatcher());
+  bind<EventDispatcher>(INFRASTRUCTURE_IDENTIFIERS.EVENT_DISPATCHER).toConstantValue(new EventDispatcher());
+  bind<typeof UserModel>(INFRASTRUCTURE_IDENTIFIERS.USER_MODEL).toConstantValue(UserModel);
 });

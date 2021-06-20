@@ -3,7 +3,7 @@ import Container from 'typedi';
 
 import AuthMiddleware from '@/ui/auth/middewares';
 
-import UserController from './controllers';
+import UserController from './controller';
 
 const route = Router();
 
