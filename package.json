@@ -10,7 +10,8 @@
     "start": "nodemon",
     "inspect": "nodemon --inspect src/app.ts",
     "test": "jest",
-    "lint": "eslint --ignore-path .gitignore --ext .ts src/ --fix"
+    "lint": "eslint --ignore-path .gitignore --ext .ts src/ --fix",
+    "tsoa": "tsoa routes && tsoa swagger"
   },
   "dependencies": {
     "agenda": "3.1.0",
@@ -27,6 +28,10 @@
     "express": "4.17.1",
     "express-basic-auth": "1.2.0",
     "express-jwt": "6.0.0",
+    "helmet": "^4.6.0",
+    "inversify": "^5.1.1",
+    "inversify-binding-decorators": "^4.0.0",
+    "inversify-express-utils": "^6.3.2",
     "ioredis": "^4.27.3",
     "jsonwebtoken": "8.5.1",
     "lodash": "4.17.20",
@@ -39,6 +44,9 @@
     "morgan": "1.10.0",
     "rand-token": "1.0.1",
     "reflect-metadata": "0.1.13",
+    "swagger-jsdoc": "6.0.0",
+    "swagger-ui-express": "4.1.6",
+    "tsoa": "^3.8.0",
     "typedi": "0.8.0",
     "uuid": "8.3.1",
     "winston": "3.3.3"

@@ -1,0 +1,13 @@
+{
+  "entryFile": "src/app.ts",
+  "noImplicitAdditionalProperties": "throw-on-extras",
+  "controllerPathGlobs": ["src/api/**/controllers.ts"],
+  "spec": {
+    "outputDirectory": "src",
+    "specVersion": 3
+  },
+  "routes": {
+    "routesDir": "src/http/router",
+    "iocModule": "src/http/iocContainer"
+  }
+}
