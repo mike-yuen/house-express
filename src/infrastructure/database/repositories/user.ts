@@ -7,9 +7,11 @@ import { provideSingleton } from '@/infrastructure/ioc';
 
 import { BaseRepository } from './_base';
 
+export type UserModel = User & Document;
+
 @provideSingleton(UserRepository)
-export default class UserRepository extends BaseRepository<User & Document> implements IUserRepository {
-  constructor() {
+export class UserRepository extends BaseRepository<UserModel> implements IUserRepository {
+  public constructor() {
     super(UserModel);
   }
 }

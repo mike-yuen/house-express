@@ -16,6 +16,7 @@ import expressLoader, { App } from './express';
 import agendaFactory from './jobScheduler/agenda';
 import { jobsLoader } from './jobScheduler/jobs';
 import config from '@/crossCutting/config';
+import { RegisterRoutes } from '@/ui/routes';
 
 export function exitProcess(error: any): void {
   logger.error(`❌  ${error}`);
@@ -61,6 +62,9 @@ async function bootstrap(): Promise<App> {
   // });
 
   const app = server.build() as App;
+
+  RegisterRoutes(app);
+
   return app;
 }
 

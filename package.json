@@ -11,7 +11,7 @@
     "inspect": "nodemon --inspect src/app.ts",
     "test": "jest",
     "lint": "eslint --ignore-path .gitignore --ext .ts src/ --fix",
-    "tsoa": "tsoa routes && tsoa swagger"
+    "tsoa": "tsoa routes"
   },
   "dependencies": {
     "agenda": "3.1.0",

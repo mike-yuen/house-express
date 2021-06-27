@@ -1,29 +1,30 @@
-import { generateRoutes, generateSwaggerSpec, RoutesConfig, SwaggerConfig } from 'tsoa';
-import { config } from './index';
-import { X_TENANT_ID, X_AUTH_TOKEN_KEY } from '../../ui/constants/header_constants';
+import { generateRoutes, RoutesConfig } from 'tsoa';
+import config from '@/crossCutting/config';
+// import { X_TENANT_ID, X_AUTH_TOKEN_KEY } from '../../ui/constants/header_constants';
 
 const basePath = config.api.prefix;
-const entryFile = './src/index.ts';
-const controllers = './src/ui/api/controllers/*.ts';
-const protocol = config.env === 'development' || config.env === 'test' ? 'http' : 'https';
+const entryFile = '@/app.ts';
+const controllers = '@/ui/user/controller.ts';
+const protocol = 'http';
+
 export const swaggerGen = async () => {
-  const swaggerOptions: SwaggerConfig = {
+  const swaggerOptions = {
     basePath,
     entryFile,
-    securityDefinitions: {
-      [X_TENANT_ID]: {
-        type: 'apiKey',
-        in: 'header',
-        name: X_TENANT_ID,
-        description: 'Tenant ID',
-      },
-      [X_AUTH_TOKEN_KEY]: {
-        type: 'apiKey',
-        in: 'header',
-        name: X_AUTH_TOKEN_KEY,
-        description: 'JWT access token',
-      },
-    },
+    // securityDefinitions: {
+    //   [X_TENANT_ID]: {
+    //     type: 'apiKey',
+    //     in: 'header',
+    //     name: X_TENANT_ID,
+    //     description: 'Tenant ID',
+    //   },
+    //   [X_AUTH_TOKEN_KEY]: {
+    //     type: 'apiKey',
+    //     in: 'header',
+    //     name: X_AUTH_TOKEN_KEY,
+    //     description: 'JWT access token',
+    //   },
+    // },
     noImplicitAdditionalProperties: 'throw-on-extras',
     host: process.env.HOST,
     description: 'Enterprise NodeJs/Typescript API boilerplate',
@@ -37,15 +38,13 @@ export const swaggerGen = async () => {
 
   const routeOptions: RoutesConfig = {
     basePath,
-    entryFile,
-    middleware: 'express',
-    authenticationModule: './src/ui/api/middleware/auth_middleware',
-    iocModule: './src/infrastructure/config/ioc',
-    routesDir: './src/ui/api',
-    controllerPathGlobs: [controllers],
+    // middleware: 'express',
+    // authenticationModule: './src/ui/api/middleware/auth_middleware',
+    iocModule: '@/infrastructure/ioc',
+    routesDir: '@/ui',
   };
 
-  if (config.env !== 'test') await generateSwaggerSpec(swaggerOptions, routeOptions);
+  // if (config.env !== 'test') await generateSwaggerSpec(swaggerOptions, routeOptions);
 
   await generateRoutes(routeOptions, swaggerOptions);
 };

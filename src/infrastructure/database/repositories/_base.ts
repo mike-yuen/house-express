@@ -3,13 +3,13 @@ import { BulkWriteOpResultObject } from 'mongodb';
 import { Document, Model, Types, QueryFindOneAndUpdateOptions } from 'mongoose';
 
 import { IBaseRepository } from '@/core/domainService/_base/repository';
-import { provideSingleton } from '@/infrastructure/ioc';
+import { provideSingleton, unmanaged } from '@/infrastructure/ioc';
 
 @provideSingleton(BaseRepository)
 export class BaseRepository<T extends Document> implements IBaseRepository<T> {
   public readonly _model: Model<Document>;
 
-  constructor(schemaModel: Model<Document>) {
+  constructor(@unmanaged() schemaModel: Model<Document>) {
     this._model = schemaModel;
   }
 
