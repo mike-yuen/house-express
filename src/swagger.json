@@ -1,0 +1,133 @@
+{
+	"basePath": "/api",
+	"consumes": [
+		"application/json"
+	],
+	"definitions": {
+		"IUserOutputDTO": {
+			"properties": {
+				"id": {
+					"type": "string"
+				},
+				"username": {
+					"type": "string"
+				},
+				"displayName": {
+					"type": "string"
+				},
+				"email": {
+					"type": "string"
+				},
+				"password": {
+					"type": "string"
+				},
+				"salt": {
+					"type": "string"
+				},
+				"role": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"id",
+				"username",
+				"email",
+				"role"
+			],
+			"type": "object",
+			"additionalProperties": false
+		}
+	},
+	"info": {
+		"title": "Swagger HouseExpress",
+		"version": "1.0.0",
+		"description": "The awesome swagger for NodeJs/Typescript API project.<br/>You can find out more about Swagger at <a href=\"https://swagger.io\" target=\"_blank\">swagger</a> or on <a href=\"https://swagger.io/irc/\" target=\"_blank\">swagger/irc</a>. For this sample, you can use the api key special-key to test the authorization filters.",
+		"license": {
+			"name": "MIT"
+		},
+		"contact": {
+			"name": "Developer",
+			"email": "nhatminh.150596@gmail.com"
+		}
+	},
+	"paths": {
+		"/auth/signup": {
+			"post": {
+				"operationId": "SignUp",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"properties": {
+								"token": {
+									"type": "string"
+								},
+								"user": {
+									"$ref": "#/definitions/IUserOutputDTO"
+								}
+							},
+							"required": [
+								"token",
+								"user"
+							],
+							"type": "object"
+						}
+					}
+				},
+				"summary": "Find all users",
+				"tags": [
+					"auth"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "requestBody",
+						"required": true,
+						"schema": {
+							"type": "object"
+						}
+					}
+				]
+			}
+		},
+		"/users": {
+			"get": {
+				"operationId": "GetAll",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"items": {
+								"$ref": "#/definitions/IUserOutputDTO"
+							},
+							"type": "array"
+						}
+					}
+				},
+				"summary": "Find all users",
+				"tags": [
+					"users"
+				],
+				"security": [],
+				"parameters": []
+			}
+		}
+	},
+	"produces": [
+		"application/json"
+	],
+	"swagger": "2.0",
+	"securityDefinitions": {},
+	"host": "localhost:3000",
+	"schemes": [
+		"http",
+		"https"
+	]
+}

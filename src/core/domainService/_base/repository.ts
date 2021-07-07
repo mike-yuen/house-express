@@ -1,40 +1,40 @@
 import { BulkWriteOpResultObject } from 'mongodb';
 import { QueryFindOneAndUpdateOptions } from 'mongoose';
 
-export interface IBaseRepository<T> {
-  create(item: T): Promise<T>;
+export interface IBaseRepository<I, O> {
+  create(item: I): Promise<O>;
 
   bulkInsert(cond: any): Promise<BulkWriteOpResultObject>;
 
   insertOne(cond: any): Promise<any>;
 
-  find(cond: any, fields: any, options: any, sortOptions?: any, populate?: boolean, maxTimeMS?: number): Promise<T[]>;
+  find(cond: any, fields: any, options: any, sortOptions?: any, populate?: boolean, maxTimeMS?: number): Promise<O[]>;
 
-  leanFind(cond: any, fields: any, options: any): Promise<T[]>;
+  leanFind(cond: any, fields: any, options: any): Promise<O[]>;
 
-  findOne(cond: any, fields: any, options: any): Promise<T>;
+  findOne(cond: any, fields: any, options: any): Promise<O>;
 
-  unorderedInsertMany(items: T[]): Promise<T[]>;
+  unorderedInsertMany(items: I[]): Promise<O[]>;
 
-  insertMany(items: any, option: any): Promise<T[]>;
+  insertMany(items: any, option: any): Promise<O[]>;
 
-  findOneAndUpdate(cond: any, update: any, options?: QueryFindOneAndUpdateOptions): Promise<T>;
+  findOneAndUpdate(cond: any, update: any, options?: QueryFindOneAndUpdateOptions): Promise<O>;
 
-  updateMany(cond: any, update: any): Promise<T>;
+  updateMany(cond: any, update: any): Promise<O>;
 
-  updateOne(cond: any, doc: any, option: any): Promise<T>;
+  updateOne(cond: any, doc: any, option: any): Promise<O>;
 
-  filterName(name: string): Promise<T>;
+  filterName(name: string): Promise<O>;
 
-  filter(name: string): Promise<T>;
+  filter(name: string): Promise<O>;
 
-  paginationWithCondition(cond: any, projection: any, option: any): Promise<T>;
+  paginationWithCondition(cond: any, projection: any, option: any): Promise<O>;
 
-  countAll(cond: any): Promise<T>;
+  countAll(cond: any): Promise<O>;
 
-  softDelete(id: string, client_id?: string): Promise<T>;
+  softDelete(id: string, client_id?: string): Promise<O>;
 
-  softDeleteById(id: string): Promise<T>;
+  softDeleteById(id: string): Promise<O>;
 
   findAndCount(cond: any, fields: any, options: any, sortOptions?: any): Promise<number>;
 

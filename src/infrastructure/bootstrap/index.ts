@@ -3,19 +3,24 @@ import { Server } from 'http';
 import { decorate, injectable } from 'inversify';
 import { buildProviderModule } from 'inversify-binding-decorators';
 import { InversifyExpressServer } from 'inversify-express-utils';
+import swaggerUi from 'swagger-ui-express';
 import { Controller } from 'tsoa';
 
+import config from '@/crossCutting/config';
 import { LoggerInstance as logger } from '@/crossCutting/logger/instance';
 import mongooseLoader from '@/infrastructure/database/connection';
 import { iocContainer } from '@/infrastructure/ioc';
 import { referenceDataIoCModule } from '@/infrastructure/ioc/inversify.config';
+import { generateSwagger } from '@/infrastructure/swagger/swagger.config';
 import { INFRASTRUCTURE_IDENTIFIERS } from '@/infrastructure/InfrastructureModuleSymbols';
+import { RegisterRoutes } from '@/ui/routes';
+// eslint-disable-next-line
+const swaggerDoc = require('@/swagger.json');
 
 import './events';
 import expressLoader, { App } from './express';
 import agendaFactory from './jobScheduler/agenda';
 import { jobsLoader } from './jobScheduler/jobs';
-import config from '@/crossCutting/config';
 
 export function exitProcess(error: any): void {
   logger.error(`❌  ${error}`);
@@ -61,7 +66,19 @@ async function bootstrap(): Promise<App> {
   // });
 
   const app = server.build() as App;
+
+  await setupSwagger(app);
+
   return app;
+}
+
+async function setupSwagger(app: App) {
+  RegisterRoutes(app);
+  logger.info('✌️ Routes generated');
+
+  await generateSwagger();
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc, { explorer: true }));
+  logger.info('✌️ SwaggerDoc generated');
 }
 
 export default bootstrap;

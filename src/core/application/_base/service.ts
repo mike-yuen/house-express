@@ -1,11 +1,2 @@
-export interface IBaseService<T> {
-  pagedGetAll({
-    searchStr,
-    skip,
-    limit,
-  }: {
-    searchStr?: string;
-    skip?: number;
-    limit?: number;
-  }): Promise<{ totalCount: number; items: T[] }>;
-}
+// eslint-disable-next-line
+export interface IBaseService<T> {}

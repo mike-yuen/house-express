@@ -7,11 +7,11 @@
   "main": "src/app.ts",
   "scripts": {
     "build": "tsc && cp ./.env ./build",
-    "start": "nodemon",
+    "dev": "nodemon",
+    "start": "node ./build/app.js",
     "inspect": "nodemon --inspect src/app.ts",
     "test": "jest",
-    "lint": "eslint --ignore-path .gitignore --ext .ts src/ --fix",
-    "tsoa": "tsoa routes && tsoa swagger"
+    "lint": "eslint --ignore-path .gitignore --ext .ts src/ --fix"
   },
   "dependencies": {
     "agenda": "3.1.0",

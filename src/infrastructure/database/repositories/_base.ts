@@ -3,13 +3,13 @@ import { BulkWriteOpResultObject } from 'mongodb';
 import { Document, Model, Types, QueryFindOneAndUpdateOptions } from 'mongoose';
 
 import { IBaseRepository } from '@/core/domainService/_base/repository';
-import { provideSingleton } from '@/infrastructure/ioc';
+import { provideSingleton, unmanaged } from '@/infrastructure/ioc';
 
 @provideSingleton(BaseRepository)
-export class BaseRepository<T extends Document> implements IBaseRepository<T> {
+export class BaseRepository<I extends Document, O extends Document> implements IBaseRepository<I, O> {
   public readonly _model: Model<Document>;
 
-  constructor(schemaModel: Model<Document>) {
+  constructor(@unmanaged() schemaModel: Model<Document>) {
     this._model = schemaModel;
   }
 
@@ -20,13 +20,13 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
     return Types.ObjectId.createFromHexString(_id);
   }
 
-  async create(item: T): Promise<T> {
-    return new Promise<T>((resolve, reject) => {
-      this._model.create(item, (err: any, res: T) => {
+  async create(item: I): Promise<O> {
+    return new Promise<O>((resolve, reject) => {
+      this._model.create(item, (err: any, res: O) => {
         if (err) {
           reject(err);
         } else {
-          resolve(<T>res);
+          resolve(<O>res);
         }
       });
     });
@@ -63,8 +63,8 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
     sortOptions?: any,
     populate = true,
     maxTimeMS?: number,
-  ): Promise<T[]> {
-    return new Promise<T[]>((resolve, reject) => {
+  ): Promise<O[]> {
+    return new Promise<O[]>((resolve, reject) => {
       let query = this._model.find(cond, fields, options);
       if (sortOptions) {
         query = query.sort(sortOptions);
@@ -78,40 +78,40 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
         query.maxTimeMS(maxTimeMS);
       }
 
-      query.exec((err: any, res: T[]) => {
+      query.exec((err: any, res: O[]) => {
         if (err) {
           reject(err);
         } else {
-          resolve(<T[]>res);
+          resolve(<O[]>res);
         }
       });
     });
   }
 
-  async leanFind(cond: any, fields: any, options: any): Promise<T[]> {
-    return new Promise<T[]>((resolve, reject) => {
+  async leanFind(cond: any, fields: any, options: any): Promise<O[]> {
+    return new Promise<O[]>((resolve, reject) => {
       const query = this._model.find(cond, fields, options);
-      query.lean({ virtuals: true }).exec((err: any, res: T[]) => {
+      query.lean({ virtuals: true }).exec((err: any, res: O[]) => {
         if (err) {
           reject(err);
         } else {
-          resolve(<T[]>res);
+          resolve(<O[]>res);
         }
       });
     });
   }
 
-  async findOne(cond: any, fields: any, options: any): Promise<T> {
-    return new Promise<T>((resolve, reject) => {
+  async findOne(cond: any, fields: any, options: any): Promise<O> {
+    return new Promise<O>((resolve, reject) => {
       this._model
         .findOne(cond, fields, options)
         .populate('revisions')
         .lean({ virtuals: true })
-        .exec((err: any, res: T) => {
+        .exec((err: any, res: O) => {
           if (err) {
             reject(err);
           } else {
-            resolve(<T>res);
+            resolve(<O>res);
           }
         });
     });
@@ -121,116 +121,116 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
    * Insert all the documents it can and report errors later
    * Ref: https://mongoosejs.com/docs/api.html#model_Model.insertMany
    */
-  async unorderedInsertMany(items: T[]): Promise<T[]> {
-    return new Promise<T[]>((resolve, reject) => {
+  async unorderedInsertMany(items: I[]): Promise<O[]> {
+    return new Promise<O[]>((resolve, reject) => {
       this._model.insertMany(items, { ordered: false }, (err: any, res: any) => {
         if (err) {
           reject(err);
         } else {
-          resolve(<T[]>res);
+          resolve(<O[]>res);
         }
       });
     });
   }
 
-  async insertMany(items: any, option: any): Promise<T[]> {
-    return new Promise<T[]>((resolve, reject) => {
+  async insertMany(items: any, option: any): Promise<O[]> {
+    return new Promise<O[]>((resolve, reject) => {
       this._model.insertMany(items, option, (err: any, res: any) => {
         if (err) {
           reject(err);
         } else {
-          resolve(<T[]>res);
+          resolve(<O[]>res);
         }
       });
     });
   }
 
-  async findOneAndUpdate(cond: any, update: any, options?: QueryFindOneAndUpdateOptions): Promise<T> {
-    return new Promise<T>((resolve, reject) => {
+  async findOneAndUpdate(cond: any, update: any, options?: QueryFindOneAndUpdateOptions): Promise<O> {
+    return new Promise<O>((resolve, reject) => {
       this._model.findOneAndUpdate(cond, update, { new: true, ...options }, (err: any, res: any) => {
         if (err) {
           reject(err);
         } else {
-          resolve(<T>res);
+          resolve(<O>res);
         }
       });
     });
   }
 
-  async updateMany(cond: any, update: any): Promise<T> {
-    return new Promise<T>((resolve, reject) => {
+  async updateMany(cond: any, update: any): Promise<O> {
+    return new Promise<O>((resolve, reject) => {
       this._model.updateMany(cond, update, (err: any, res: any) => {
         if (err) {
           reject(err);
         } else {
-          resolve(<T>res);
+          resolve(<O>res);
         }
       });
     });
   }
 
-  async updateOne(cond: any, doc: any, option: any): Promise<T> {
-    return new Promise<T>((resolve, reject) => {
+  async updateOne(cond: any, doc: any, option: any): Promise<O> {
+    return new Promise<O>((resolve, reject) => {
       this._model.updateOne(cond, doc, option, (err: any, res: any) => {
         if (err) {
           reject(err);
         } else {
-          resolve(<T>res);
+          resolve(<O>res);
         }
       });
     });
   }
 
-  async filterName(name: string): Promise<T> {
-    return new Promise<T>((resolve, reject) => {
+  async filterName(name: string): Promise<O> {
+    return new Promise<O>((resolve, reject) => {
       this._model.find({ $text: { $search: name } }, (err: any, res: any) => {
         if (err) {
           reject(err);
         } else {
-          resolve(<T>res);
+          resolve(<O>res);
         }
       });
     });
   }
 
-  async filter(name: string): Promise<T> {
-    return new Promise<T>((resolve, reject) => {
+  async filter(name: string): Promise<O> {
+    return new Promise<O>((resolve, reject) => {
       this._model.find({ $text: { $search: name } }, (err: any, res: any) => {
         if (err) {
           reject(err);
         } else {
-          resolve(<T>res);
+          resolve(<O>res);
         }
       });
     });
   }
 
-  async paginationWithCondition(cond: any, projection: any, option: any): Promise<T> {
-    return new Promise<T>((resolve, reject) => {
+  async paginationWithCondition(cond: any, projection: any, option: any): Promise<O> {
+    return new Promise<O>((resolve, reject) => {
       this._model.find({ $and: [{ deleted: false }, cond] }, {}, option, (err: any, res: any) => {
         if (err) {
           reject(err);
         } else {
-          resolve(<T>res);
+          resolve(<O>res);
         }
       });
     });
   }
 
-  async countAll(cond: any): Promise<T> {
-    return new Promise<T>((resolve, reject) => {
+  async countAll(cond: any): Promise<O> {
+    return new Promise<O>((resolve, reject) => {
       this._model.find({ $and: [{ deleted: false }, cond] }).countDocuments((err: any, res: any) => {
         if (err) {
           reject(err);
         } else {
-          resolve(<T>res);
+          resolve(<O>res);
         }
       });
     });
   }
 
-  async softDelete(id: string, client_id?: string): Promise<T> {
-    return new Promise<T>((resolve, reject) => {
+  async softDelete(id: string, client_id?: string): Promise<O> {
+    return new Promise<O>((resolve, reject) => {
       const condition: any = {
         $and: [{ _id: id }],
       };
@@ -241,19 +241,19 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
         if (err) {
           reject(err);
         } else {
-          resolve(<T>res);
+          resolve(<O>res);
         }
       });
     });
   }
 
-  async softDeleteById(id: string): Promise<T> {
-    return new Promise<T>((resolve, reject) => {
+  async softDeleteById(id: string): Promise<O> {
+    return new Promise<O>((resolve, reject) => {
       this._model.findOneAndUpdate({ _id: id }, { deleted: true }, (err: any, res: any) => {
         if (err) {
           reject(err);
         } else {
-          resolve(<T>res);
+          resolve(<O>res);
         }
       });
     });
@@ -317,7 +317,7 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
         if (err) {
           reject(err);
         } else {
-          resolve(<T>res);
+          resolve(<O>res);
         }
       });
     });

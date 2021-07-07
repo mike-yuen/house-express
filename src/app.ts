@@ -8,6 +8,7 @@ import 'reflect-metadata';
 import config from '@/crossCutting/config';
 import { LoggerInstance as logger } from '@/crossCutting/logger/instance';
 import bootstrap, { exitProcess, startAppServer } from '@/infrastructure/bootstrap';
+import { UserService } from './ui/user/service';
 
 export async function startServer(port: number) {
   try {

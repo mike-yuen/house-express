@@ -2,13 +2,9 @@ import express, { Express, NextFunction, Request, Response } from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import helmet from 'helmet';
-// import swaggerUi from 'swagger-ui-express';
 
 // import config from '@/crossCutting/config';
 import { responseHandler } from '@/crossCutting/responseHandler';
-// const swaggerDoc = require('@/swagger.json');
-
-// import routes from './routes';
 
 export type App = Express;
 
@@ -38,8 +34,6 @@ export default (app: express.Application) => {
 
   // Load API routes
   // app.use(config.api.prefix, routes());
-
-  // app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc, { explorer: true }));
 
   // Custom error handlers
   app.use(async (err: any, req: Request, res: Response, next: NextFunction) => {

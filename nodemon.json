@@ -5,6 +5,8 @@
   ],
   "ext": "js,ts,json",
   "ignore": [
+    "src/**/routes.ts",
+    "src/swagger.json",
     "src/**/*.spec.ts"
   ],
   "exec": "ts-node  --transpile-only ./src/app.ts"

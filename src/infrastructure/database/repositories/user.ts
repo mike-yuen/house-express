@@ -6,10 +6,14 @@ import UserModel from '@/infrastructure/database/models/user';
 import { provideSingleton } from '@/infrastructure/ioc';
 
 import { BaseRepository } from './_base';
+import { IUserInputDTO, IUserOutputDTO } from '@/core/application/user/dto';
+
+export type InputUserModel = User & Document;
+export type OutputUserModel = User & Document;
 
 @provideSingleton(UserRepository)
-export default class UserRepository extends BaseRepository<User & Document> implements IUserRepository {
-  constructor() {
+export class UserRepository extends BaseRepository<InputUserModel, OutputUserModel> implements IUserRepository {
+  public constructor() {
     super(UserModel);
   }
 }

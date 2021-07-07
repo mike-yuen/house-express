@@ -1,51 +1,61 @@
-import { generateRoutes, generateSwaggerSpec, RoutesConfig, SwaggerConfig } from 'tsoa';
-import { config } from './index';
-import { X_TENANT_ID, X_AUTH_TOKEN_KEY } from '../../ui/constants/header_constants';
+import { RoutesConfig, generateSpecAndRoutes, SwaggerArgs, SpecConfig } from 'tsoa';
+import config from '@/crossCutting/config';
+// import { X_TENANT_ID, X_AUTH_TOKEN_KEY } from '../../ui/constants/header_constants';
 
 const basePath = config.api.prefix;
-const entryFile = './src/index.ts';
-const controllers = './src/ui/api/controllers/*.ts';
-const protocol = config.env === 'development' || config.env === 'test' ? 'http' : 'https';
-export const swaggerGen = async () => {
-  const swaggerOptions: SwaggerConfig = {
-    basePath,
-    entryFile,
-    securityDefinitions: {
-      [X_TENANT_ID]: {
-        type: 'apiKey',
-        in: 'header',
-        name: X_TENANT_ID,
-        description: 'Tenant ID',
-      },
-      [X_AUTH_TOKEN_KEY]: {
-        type: 'apiKey',
-        in: 'header',
-        name: X_AUTH_TOKEN_KEY,
-        description: 'JWT access token',
-      },
-    },
-    noImplicitAdditionalProperties: 'throw-on-extras',
+const entryFile = 'src/app.ts';
+const controllers = 'src/ui/**/controller.ts';
+const protocol = 'http';
+const outputDirectory = 'src';
+
+export const generateSwagger = async () => {
+  const specOptions: SpecConfig = {
+    outputDirectory: outputDirectory,
     host: process.env.HOST,
-    description: 'Enterprise NodeJs/Typescript API boilerplate',
     version: '1.0.0',
-    name: 'node-typescript-boilerplate',
-    specVersion: 3,
-    schemes: [protocol],
-    outputDirectory: './',
-    controllerPathGlobs: [controllers],
+    specVersion: 2,
+    name: 'Swagger HouseExpress',
+    description:
+      'The awesome swagger for NodeJs/Typescript API project.<br/>You can find out more about Swagger at <a href="https://swagger.io" target="_blank">swagger</a> or on <a href="https://swagger.io/irc/" target="_blank">swagger/irc</a>. For this sample, you can use the api key special-key to test the authorization filters.',
+    contact: {
+      name: 'Developer',
+      email: 'nhatminh.150596@gmail.com',
+    },
+    basePath,
+    // securityDefinitions: {
+    //   [X_TENANT_ID]: {
+    //     type: 'apiKey',
+    //     in: 'header',
+    //     name: X_TENANT_ID,
+    //     description: 'Tenant ID',
+    //   },
+    //   [X_AUTH_TOKEN_KEY]: {
+    //     type: 'apiKey',
+    //     in: 'header',
+    //     name: X_AUTH_TOKEN_KEY,
+    //     description: 'JWT access token',
+    //   },
+    // },
+    schemes: ['http', 'https'],
   };
 
   const routeOptions: RoutesConfig = {
+    routesDir: 'src/ui',
     basePath,
-    entryFile,
-    middleware: 'express',
-    authenticationModule: './src/ui/api/middleware/auth_middleware',
-    iocModule: './src/infrastructure/config/ioc',
-    routesDir: './src/ui/api',
-    controllerPathGlobs: [controllers],
+    // middleware: 'express',
+    iocModule: 'src/infrastructure/ioc',
+    // authenticationModule: './src/ui/api/middleware/auth_middleware',
   };
 
-  if (config.env !== 'test') await generateSwaggerSpec(swaggerOptions, routeOptions);
+  const swaggerArgs: SwaggerArgs = {
+    configuration: {
+      entryFile,
+      noImplicitAdditionalProperties: 'throw-on-extras',
+      controllerPathGlobs: [controllers],
+      spec: specOptions,
+      routes: routeOptions,
+    },
+  };
 
-  await generateRoutes(routeOptions, swaggerOptions);
+  await generateSpecAndRoutes(swaggerArgs);
 };
