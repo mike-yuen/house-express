@@ -1,16 +1,27 @@
-import { generateRoutes, RoutesConfig } from 'tsoa';
+import { RoutesConfig, generateSpecAndRoutes, SwaggerArgs, SpecConfig } from 'tsoa';
 import config from '@/crossCutting/config';
 // import { X_TENANT_ID, X_AUTH_TOKEN_KEY } from '../../ui/constants/header_constants';
 
 const basePath = config.api.prefix;
-const entryFile = '@/app.ts';
-const controllers = '@/ui/user/controller.ts';
+const entryFile = 'src/app.ts';
+const controllers = 'src/ui/**/controller.ts';
 const protocol = 'http';
+const outputDirectory = 'src';
 
-export const swaggerGen = async () => {
-  const swaggerOptions = {
+export const generateSwagger = async () => {
+  const specOptions: SpecConfig = {
+    outputDirectory: outputDirectory,
+    host: process.env.HOST,
+    version: '1.0.0',
+    specVersion: 2,
+    name: 'Swagger HouseExpress',
+    description:
+      'The awesome swagger for NodeJs/Typescript API project.<br/>You can find out more about Swagger at <a href="https://swagger.io" target="_blank">swagger</a> or on <a href="https://swagger.io/irc/" target="_blank">swagger/irc</a>. For this sample, you can use the api key special-key to test the authorization filters.',
+    contact: {
+      name: 'Developer',
+      email: 'nhatminh.150596@gmail.com',
+    },
     basePath,
-    entryFile,
     // securityDefinitions: {
     //   [X_TENANT_ID]: {
     //     type: 'apiKey',
@@ -25,26 +36,26 @@ export const swaggerGen = async () => {
     //     description: 'JWT access token',
     //   },
     // },
-    noImplicitAdditionalProperties: 'throw-on-extras',
-    host: process.env.HOST,
-    description: 'Enterprise NodeJs/Typescript API boilerplate',
-    version: '1.0.0',
-    name: 'node-typescript-boilerplate',
-    specVersion: 3,
-    schemes: [protocol],
-    outputDirectory: './',
-    controllerPathGlobs: [controllers],
+    schemes: ['http', 'https'],
   };
 
   const routeOptions: RoutesConfig = {
+    routesDir: 'src/ui',
     basePath,
     // middleware: 'express',
+    iocModule: 'src/infrastructure/ioc',
     // authenticationModule: './src/ui/api/middleware/auth_middleware',
-    iocModule: '@/infrastructure/ioc',
-    routesDir: '@/ui',
   };
 
-  // if (config.env !== 'test') await generateSwaggerSpec(swaggerOptions, routeOptions);
+  const swaggerArgs: SwaggerArgs = {
+    configuration: {
+      entryFile,
+      noImplicitAdditionalProperties: 'throw-on-extras',
+      controllerPathGlobs: [controllers],
+      spec: specOptions,
+      routes: routeOptions,
+    },
+  };
 
-  await generateRoutes(routeOptions, swaggerOptions);
+  await generateSpecAndRoutes(swaggerArgs);
 };

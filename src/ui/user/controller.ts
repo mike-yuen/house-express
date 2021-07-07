@@ -4,20 +4,23 @@
 
 // import { SuccessResponse } from '@/crossCutting/responseHandler/httpResponse';
 import { UserService } from './service';
-import { Get, Route } from 'tsoa';
+import { Get, Route, Tags } from 'tsoa';
 import { inject, provideSingleton } from '@/infrastructure/ioc';
+import { IUserOutputDTO } from '../../core/application/user/dto';
 import { IUserService } from '@/core/application/user/service';
-import { IUserOutputDTO } from './interface';
 
 @Route('users')
+@Tags('users')
 @provideSingleton(UserController)
 export class UserController {
   constructor(@inject(UserService) private readonly userService: IUserService) {}
 
+  /**
+   * @summary Find all users
+   */
   @Get()
   public async getAll(): Promise<IUserOutputDTO[]> {
     const user = await this.userService.getAll();
-    console.log('_____', user);
     return user;
   }
 
