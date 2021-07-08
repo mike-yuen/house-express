@@ -1,5 +1,4 @@
-import { Body, Post, Route, Tags } from 'tsoa';
-import { Service } from 'typedi';
+import { Body, Controller, Post, Route, Tags } from 'tsoa';
 
 import { IUserInputDTO, IUserOutputDTO } from '@/core/application/user/dto';
 import { CreateSuccessResponse, SuccessResponse } from '@/crossCutting/responseHandler/httpResponse';
@@ -11,11 +10,13 @@ import AuthService from './service';
 @Route('auth')
 @Tags('auth')
 @provideSingleton(AuthController)
-export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+export class AuthController extends Controller {
+  constructor(private readonly authService: AuthService) {
+    super();
+  }
 
   /**
-   * @summary Find all users
+   * @summary Create user
    */
   @Post('/signup')
   public async SignUp(@Body() requestBody: any): Promise<{ user: IUserOutputDTO; token: string }> {
@@ -23,24 +24,35 @@ export class AuthController {
     return { user, token };
   }
 
-  // public SignIn = async (req: Request, res: Response, next: NextFunction) => {
-  //   try {
-  //     const { email, password } = req.body;
-  //     const { user, token, refreshToken } = await this.authService.SignIn(email, password);
+  /**
+   * @summary Login to an awesome site
+   */
+  @Post('/signin')
+  public async SignIn(@Body() requestBody: any) {
+    try {
+      const { email, password } = requestBody;
+      const { user, token, refreshToken } = await this.authService.SignIn(email, password);
 
-  //     return res
-  //       .status(200)
-  //       .cookie(COOKIE_KEY.token, token, { httpOnly: true, secure: false, maxAge: COOKIE_EXPIRATION.token })
-  //       .cookie(COOKIE_KEY.refreshToken, refreshToken, {
-  //         httpOnly: true,
-  //         secure: false,
-  //         maxAge: COOKIE_EXPIRATION.refreshToken,
-  //       })
-  //       .json({ user });
-  //   } catch (e) {
-  //     return next(e);
-  //   }
-  // };
+      this.setHeader('Set-Cookie', [
+        `${COOKIE_KEY.token}=${token}; HttpOnly`,
+        `${COOKIE_KEY.refreshToken}=${refreshToken}; HttpOnly`,
+      ]);
+
+      return user;
+
+      // return res
+      //   .status(200)
+      //   .cookie(COOKIE_KEY.token, token, { httpOnly: true, secure: false, maxAge: COOKIE_EXPIRATION.token })
+      //   .cookie(COOKIE_KEY.refreshToken, refreshToken, {
+      //     httpOnly: true,
+      //     secure: false,
+      //     maxAge: COOKIE_EXPIRATION.refreshToken,
+      //   })
+      //   .json({ user });
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   // public RefreshToken = async (req: any, res: Response, next: NextFunction) => {
   //   try {

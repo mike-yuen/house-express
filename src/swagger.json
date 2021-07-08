@@ -77,7 +77,38 @@
 						}
 					}
 				},
-				"summary": "Find all users",
+				"summary": "Create user",
+				"tags": [
+					"auth"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "requestBody",
+						"required": true,
+						"schema": {
+							"type": "object"
+						}
+					}
+				]
+			}
+		},
+		"/auth/signin": {
+			"post": {
+				"operationId": "SignIn",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/IUserOutputDTO"
+						}
+					}
+				},
+				"summary": "Login to an awesome site",
 				"tags": [
 					"auth"
 				],
@@ -126,6 +157,16 @@
 	"swagger": "2.0",
 	"securityDefinitions": {},
 	"host": "localhost:3000",
+	"tags": [
+		{
+			"name": "auth",
+			"description": "Access to our site"
+		},
+		{
+			"name": "users",
+			"description": "Operations about users"
+		}
+	],
 	"schemes": [
 		"http",
 		"https"

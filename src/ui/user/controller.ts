@@ -4,16 +4,18 @@
 
 // import { SuccessResponse } from '@/crossCutting/responseHandler/httpResponse';
 import { UserService } from './service';
-import { Get, Route, Tags } from 'tsoa';
+import { Controller, Get, Route, Tags } from 'tsoa';
 import { inject, provideSingleton } from '@/infrastructure/ioc';
-import { IUserOutputDTO } from '../../core/application/user/dto';
+import { IUserOutputDTO } from '@/core/application/user/dto';
 import { IUserService } from '@/core/application/user/service';
 
 @Route('users')
 @Tags('users')
 @provideSingleton(UserController)
-export class UserController {
-  constructor(@inject(UserService) private readonly userService: IUserService) {}
+export class UserController extends Controller {
+  constructor(@inject(UserService) private readonly userService: IUserService) {
+    super();
+  }
 
   /**
    * @summary Find all users
