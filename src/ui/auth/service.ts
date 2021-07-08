@@ -72,10 +72,10 @@ export default class AuthService {
     }
   }
 
-  public SignIn = async (
+  public async SignIn(
     email: string,
     password: string,
-  ): Promise<{ user: IUserOutputDTO; token: string; refreshToken: string }> => {
+  ): Promise<{ user: IUserOutputDTO; token: string; refreshToken: string }> {
     try {
       const user = await this.userRepository.findOne({ email }, {}, {});
 
@@ -102,7 +102,7 @@ export default class AuthService {
     } catch (e) {
       throw e;
     }
-  };
+  }
 
   // public RefreshToken = async (currentRefreshToken): Promise<{ token: string; refreshToken: string }> => {
   //   try {

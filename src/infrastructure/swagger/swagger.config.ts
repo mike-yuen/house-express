@@ -36,6 +36,16 @@ export const generateSwagger = async () => {
     //     description: 'JWT access token',
     //   },
     // },
+    tags: [
+      {
+        name: 'auth',
+        description: 'Access to our site',
+      },
+      {
+        name: 'users',
+        description: 'Operations about users',
+      },
+    ],
     schemes: ['http', 'https'],
   };
 
@@ -54,6 +64,12 @@ export const generateSwagger = async () => {
       controllerPathGlobs: [controllers],
       spec: specOptions,
       routes: routeOptions,
+      compilerOptions: {
+        baseUrl: 'src',
+        paths: {
+          '@/*': ['*'],
+        },
+      },
     },
   };
 
