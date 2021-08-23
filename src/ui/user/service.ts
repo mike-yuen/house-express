@@ -1,13 +1,8 @@
-// import { REDIS_SUFFIX } from '@/ui/auth/constants';
-// import RedisService from '@/crossCutting/redis';
-
-import { IUserOutputDTO } from '@/core/application/user/dto';
-import { IUserService } from '@/core/application/user/service';
-import { IUserRepository } from '@/core/domainService/user/repository';
-import { UserRepository } from '@/infrastructure/database/repositories/user';
+import { IUserService, IUserOutputDTO } from '@/core/application/user';
+import { IUserRepository } from '@/core/domainService/user';
 import { inject, provideSingleton } from '@/infrastructure/ioc';
+import { UserRepository } from '@/infrastructure/database/repositories/user';
 
-// import MailerService from './mailer';
 @provideSingleton(UserService)
 export class UserService implements IUserService {
   constructor(@inject(UserRepository) private readonly userRepository: IUserRepository) {}

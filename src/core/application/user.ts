@@ -16,3 +16,11 @@ export interface IUserOutputDTO {
   salt?: string;
   role: string;
 }
+
+export interface IUserService {
+  // create(user: IUserInputDTO): Promise<IUserOutputDTO>;
+  // get(query: { id?: string; emailOrUsername?: string }): Promise<IUserOutputDTO>;
+  getAll(): Promise<IUserOutputDTO[]>;
+  // update(user: Partial<User>): Promise<void>;
+  // delete(id: string): Promise<boolean>;
+}

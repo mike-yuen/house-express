@@ -1,8 +1,9 @@
 import { Response } from 'express';
+import { HttpStatusCodeLiteral } from 'tsoa';
 import { HttpStatusCode } from './httpStatusCode';
 
 export abstract class HttpResponse {
-  constructor(protected statusCode: HttpStatusCode, protected message?: string) {}
+  constructor(protected statusCode: HttpStatusCodeLiteral, protected message?: string) {}
 
   public prepare<T extends HttpResponse>(res: Response, response: T): Response {
     return res.status(this.statusCode).json(HttpResponse.sanitize(response));

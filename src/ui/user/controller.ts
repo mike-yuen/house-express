@@ -1,14 +1,9 @@
-// import { Request, Response, NextFunction } from 'express';
-// import { Service, Inject } from 'typedi';
-// import { Logger } from 'winston';
-
-// import { SuccessResponse } from '@/crossCutting/responseHandler/httpResponse';
-import { UserService } from './service';
 import { Controller, Get, Route, Tags } from 'tsoa';
-import { inject, provideSingleton } from '@/infrastructure/ioc';
-import { IUserOutputDTO } from '@/core/application/user/dto';
-import { IUserService } from '@/core/application/user/service';
 
+import { IUserService, IUserOutputDTO } from '@/core/application/user';
+import { inject, provideSingleton } from '@/infrastructure/ioc';
+
+import { UserService } from './service';
 @Route('users')
 @Tags('users')
 @provideSingleton(UserController)

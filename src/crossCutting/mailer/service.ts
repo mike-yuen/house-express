@@ -1,6 +1,6 @@
 import { Service, Inject } from 'typedi';
 
-import { User } from '@/core/domainModel/user/User';
+import { User } from '@/core/domainModel/user';
 
 @Service()
 export default class MailerService {

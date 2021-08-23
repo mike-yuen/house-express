@@ -1,6 +1,5 @@
 import { RoutesConfig, generateSpecAndRoutes, SwaggerArgs, SpecConfig } from 'tsoa';
 import config from '@/crossCutting/config';
-// import { X_TENANT_ID, X_AUTH_TOKEN_KEY } from '../../ui/constants/header_constants';
 
 const basePath = config.api.prefix;
 const entryFile = 'src/app.ts';
@@ -22,20 +21,6 @@ export const generateSwagger = async () => {
       email: 'nhatminh.150596@gmail.com',
     },
     basePath,
-    // securityDefinitions: {
-    //   [X_TENANT_ID]: {
-    //     type: 'apiKey',
-    //     in: 'header',
-    //     name: X_TENANT_ID,
-    //     description: 'Tenant ID',
-    //   },
-    //   [X_AUTH_TOKEN_KEY]: {
-    //     type: 'apiKey',
-    //     in: 'header',
-    //     name: X_AUTH_TOKEN_KEY,
-    //     description: 'JWT access token',
-    //   },
-    // },
     tags: [
       {
         name: 'auth',
@@ -52,9 +37,9 @@ export const generateSwagger = async () => {
   const routeOptions: RoutesConfig = {
     routesDir: 'src/ui',
     basePath,
-    // middleware: 'express',
+    middleware: 'express',
     iocModule: 'src/infrastructure/ioc',
-    // authenticationModule: './src/ui/api/middleware/auth_middleware',
+    authenticationModule: 'src/ui/auth/middleware.ts',
   };
 
   const swaggerArgs: SwaggerArgs = {

@@ -4,8 +4,8 @@ export const COOKIE_KEY = {
 };
 
 export const COOKIE_EXPIRATION = {
-  token: 24 * 60 * 60 * 1000,
-  refreshToken: 7 * 24 * 60 * 60 * 1000,
+  token: 24 * 60 * 60,
+  refreshToken: 7 * 24 * 60 * 60,
 };
 
 export const REDIS_SUFFIX = {

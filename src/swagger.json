@@ -106,6 +106,20 @@
 						"schema": {
 							"$ref": "#/definitions/IUserOutputDTO"
 						}
+					},
+					"404": {
+						"description": "",
+						"schema": {
+							"properties": {
+								"message": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"message"
+							],
+							"type": "object"
+						}
 					}
 				},
 				"summary": "Login to an awesome site",
@@ -113,6 +127,41 @@
 					"auth"
 				],
 				"security": [],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "requestBody",
+						"required": true,
+						"schema": {
+							"type": "object"
+						}
+					}
+				]
+			}
+		},
+		"/auth/signout": {
+			"post": {
+				"operationId": "SignOut",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"type": "string"
+						}
+					}
+				},
+				"summary": "Goodbye my friend",
+				"tags": [
+					"auth"
+				],
+				"security": [
+					{
+						"X-Auth-Jwt-Cookie": []
+					}
+				],
 				"parameters": [
 					{
 						"in": "body",

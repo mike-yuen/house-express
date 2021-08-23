@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 
-import { User } from '@/core/domainModel/user/User';
-import { USER_ROLES } from '@/core/domainModel/user/UserRoles';
+import { User, USER_ROLES } from '@/core/domainModel/user';
 
 const transform = (doc: mongoose.Document, ret: any) => {
   ret.id = ret._id.toString();
