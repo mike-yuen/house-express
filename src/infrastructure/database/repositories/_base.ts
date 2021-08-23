@@ -2,7 +2,7 @@ import { isNumber } from 'lodash';
 import { BulkWriteOpResultObject } from 'mongodb';
 import { Document, Model, Types, QueryFindOneAndUpdateOptions } from 'mongoose';
 
-import { IBaseRepository } from '@/core/domainService/_base/repository';
+import { IBaseRepository } from '@/core/domainService/_base';
 import { provideSingleton, unmanaged } from '@/infrastructure/ioc';
 
 @provideSingleton(BaseRepository)

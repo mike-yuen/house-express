@@ -1,4 +1,10 @@
-import { BaseEntity } from '../_base/entity';
+import { BaseEntity } from './_base';
+
+export enum USER_ROLES {
+  SUPER_ADMIN = 'superAdmin',
+  ADMIN = 'admin',
+  USER = 'user',
+}
 
 export class User extends BaseEntity {
   constructor(

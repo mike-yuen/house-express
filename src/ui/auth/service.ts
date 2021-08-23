@@ -2,42 +2,41 @@ import argon2 from 'argon2';
 import { randomBytes } from 'crypto';
 import jwt from 'jsonwebtoken';
 import randtoken from 'rand-token';
-import { Logger } from 'winston';
 
-import { IUserInputDTO, IUserOutputDTO } from '@/core/application/user/dto';
-import { IUserRepository } from '@/core/domainService/user/repository';
+import { IUserInputDTO, IUserOutputDTO } from '@/core/application/user';
+import { IUserRepository } from '@/core/domainService/user';
 import config from '@/crossCutting/config';
 // import RedisService from '@/crossCutting/redis';
 import { NotFoundResponse } from '@/crossCutting/responseHandler/httpResponse';
 import { UserRepository } from '@/infrastructure/database/repositories/user';
 import { inject, provideSingleton } from '@/infrastructure/ioc';
-import { EventDispatcher, EventDispatcherInterface } from '@/infrastructure/utils/decorators/eventDispatcher';
-import events from '@/ui/user/event/eventNames';
 
 import { REDIS_SUFFIX } from './constants';
+import { IAuthService } from '@/core/application/auth';
 // import MailerService from './mailer';
 
 @provideSingleton(AuthService)
-export default class AuthService {
+export class AuthService implements IAuthService {
   constructor(@inject(UserRepository) private readonly userRepository: IUserRepository) {}
 
   private redisKey = (userId: string) => {
     return `user:${userId}:${REDIS_SUFFIX.refreshToken}`;
   };
 
-  private generateToken = user => {
+  private generateToken(user: IUserOutputDTO) {
     // this.logger.silly(`Sign JWT for userId: ${user._id}`);
     return jwt.sign(
       {
         id: user.id, // Will use this in the middleware 'getToken'
         username: user.username,
+        role: user.role,
       },
       config.jwtSecret,
       { expiresIn: '1d' },
     );
-  };
+  }
 
-  private generateRefreshToken = (user, key: string) => {
+  private generateRefreshToken(user: IUserOutputDTO, key: string) {
     // this.logger.silly(`Generate refresh token JWT for userId: ${user._id}`);
     return jwt.sign(
       {
@@ -47,9 +46,9 @@ export default class AuthService {
       config.jwtSecret,
       { expiresIn: '7d' },
     );
-  };
+  }
 
-  public async SignUp(userInputDTO: IUserInputDTO): Promise<{ user: IUserOutputDTO; token: string }> {
+  public async signUp(userInputDTO: IUserInputDTO): Promise<{ user: IUserOutputDTO; token: string }> {
     try {
       const salt = randomBytes(32);
       const hashedPassword = await argon2.hash(userInputDTO.password, { salt });
@@ -72,12 +71,12 @@ export default class AuthService {
     }
   }
 
-  public async SignIn(
-    email: string,
+  public async signIn(
+    emailOrUsername: string,
     password: string,
   ): Promise<{ user: IUserOutputDTO; token: string; refreshToken: string }> {
     try {
-      const user = await this.userRepository.findOne({ email }, {}, {});
+      const user = await this.userRepository.findOne({ email: emailOrUsername }, {}, {});
 
       /* We use verify from argon2 to prevent 'timing based' attacks */
       // this.logger.silly('Checking password');
