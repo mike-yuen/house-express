@@ -5,6 +5,10 @@ import { Document, Model, Types, QueryFindOneAndUpdateOptions } from 'mongoose';
 import { IBaseRepository } from '@/core/domainService/_base';
 import { provideSingleton, unmanaged } from '@/infrastructure/ioc';
 
+function transform(doc: Document, ret: any) {
+  ret.id = ret._id.toString();
+  delete ret._id;
+}
 @provideSingleton(BaseRepository)
 export class BaseRepository<I extends Document, O extends Document> implements IBaseRepository<I, O> {
   public readonly _model: Model<Document>;
@@ -26,7 +30,7 @@ export class BaseRepository<I extends Document, O extends Document> implements I
         if (err) {
           reject(err);
         } else {
-          resolve(<O>res);
+          resolve(<O>res.toObject());
         }
       });
     });
@@ -103,17 +107,13 @@ export class BaseRepository<I extends Document, O extends Document> implements I
 
   async findOne(cond: any, fields: any, options: any): Promise<O> {
     return new Promise<O>((resolve, reject) => {
-      this._model
-        .findOne(cond, fields, options)
-        .populate('revisions')
-        .lean({ virtuals: true })
-        .exec((err: any, res: O) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(<O>res);
-          }
-        });
+      this._model.findOne(cond, fields, options).exec((err: any, res: O) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(<O>res.toObject());
+        }
+      });
     });
   }
 

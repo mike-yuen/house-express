@@ -6,7 +6,7 @@ import isObject from 'lodash/isObject';
 import isUndefined from 'lodash/isUndefined';
 import map from 'lodash/map';
 
-import { inject, iocContainer, provideSingleton } from '@/infrastructure/ioc';
+import { iocContainer, provideSingleton, unmanaged } from '@/infrastructure/ioc';
 import { ILoggerService } from '@/crossCutting/logger/interface';
 import { LoggerService } from '@/crossCutting/logger';
 
@@ -19,9 +19,9 @@ export class RedisService implements IRedisService {
 
   private redis: Redis.Redis;
   private expiryTime = -1; // seconds
-  private readonly logger = iocContainer.get<ILoggerService>(LoggerService);
+  // private readonly logger = iocContainer.get<ILoggerService>(LoggerService);
 
-  constructor(expiryTime?: number) {
+  constructor(@unmanaged() expiryTime?: number) {
     if (!isUndefined(expiryTime) && expiryTime > 0) {
       this.expiryTime = expiryTime;
     }
@@ -54,7 +54,7 @@ export class RedisService implements IRedisService {
       }
       return Promise.resolve(true);
     } catch (err) {
-      this.logger.error('Error while push data into redis', err);
+      // this.logger.error('Error while push data into redis', err);
       return Promise.reject(err);
     }
   }
@@ -80,7 +80,7 @@ export class RedisService implements IRedisService {
       }
       return Promise.resolve(true);
     } catch (err) {
-      this.logger.error(`Error while set data into redis for key ${key}: `, err);
+      // this.logger.error(`Error while set data into redis for key ${key}: `, err);
       return Promise.reject(err);
     }
   }
@@ -96,7 +96,7 @@ export class RedisService implements IRedisService {
       }
       return value;
     } catch (err) {
-      this.logger.error(`Error while get value of key ${key} from redis`, err);
+      // this.logger.error(`Error while get value of key ${key} from redis`, err);
       return Promise.reject(err);
     }
   }
@@ -117,7 +117,7 @@ export class RedisService implements IRedisService {
       }
       return list;
     } catch (err) {
-      this.logger.error('Error while get data from redis', err);
+      // this.logger.error('Error while get data from redis', err);
       return Promise.reject(err);
     }
   }
@@ -127,7 +127,7 @@ export class RedisService implements IRedisService {
       await this.redis.del(key);
       return true;
     } catch (err) {
-      this.logger.error(`Error while delete key: ${key} in redis`, err);
+      // this.logger.error(`Error while delete key: ${key} in redis`, err);
       return Promise.reject(err);
     }
   }
@@ -137,7 +137,7 @@ export class RedisService implements IRedisService {
       await this.redis.lrem(key, 0, value);
       return true;
     } catch (err) {
-      this.logger.error(`Error while delete value: ${value} from ${key} in redis`, err);
+      // this.logger.error(`Error while delete value: ${value} from ${key} in redis`, err);
       return Promise.reject(err);
     }
   }
@@ -150,7 +150,7 @@ export class RedisService implements IRedisService {
       await this.redis.sadd(key, data);
       return true;
     } catch (e) {
-      this.logger.error(`[cacheRow]Has error while cache row into redis`, e);
+      // this.logger.error(`[cacheRow]Has error while cache row into redis`, e);
       throw e;
     }
   }
@@ -159,7 +159,7 @@ export class RedisService implements IRedisService {
     try {
       return await this.redis.smembers(key);
     } catch (e) {
-      this.logger.error(`[getCachedRow]Has error while cache row into redis`, e);
+      // this.logger.error(`[getCachedRow]Has error while cache row into redis`, e);
       throw e;
     }
   }
@@ -168,7 +168,7 @@ export class RedisService implements IRedisService {
     try {
       return await this.redis.srem(key, members);
     } catch (e) {
-      this.logger.error(`[deleteCachedRows]Has error while deleting cached rows in redis`, e);
+      // this.logger.error(`[deleteCachedRows]Has error while deleting cached rows in redis`, e);
       throw e;
     }
   }

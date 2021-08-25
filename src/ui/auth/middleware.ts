@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 
 import { USER_ROLES } from '@/core/domainModel/user';
 import config from '@/crossCutting/config';
-import { X_AUTH_JWT_COOKIE } from '@/crossCutting/constants/header';
+import { X_AUTH_JWT_COOKIE } from '@/infrastructure/common/constants';
 import { COOKIE_KEY } from '@/ui/auth/constants';
 
 function getTokenFromCookie(req: Request, tokenType: string) {
