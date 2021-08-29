@@ -4,6 +4,14 @@
 		"application/json"
 	],
 	"definitions": {
+		"USER_ROLES": {
+			"enum": [
+				"superAdmin",
+				"admin",
+				"user"
+			],
+			"type": "string"
+		},
 		"IUserOutputDTO": {
 			"properties": {
 				"id": {
@@ -25,7 +33,7 @@
 					"type": "string"
 				},
 				"role": {
-					"type": "string"
+					"$ref": "#/definitions/USER_ROLES"
 				}
 			},
 			"required": [
@@ -33,6 +41,38 @@
 				"username",
 				"email",
 				"role"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"FRIEND_REQUEST_STATUS": {
+			"enum": [
+				1,
+				2,
+				3
+			],
+			"type": "number"
+		},
+		"IFriendRequestOutputDTO": {
+			"properties": {
+				"id": {
+					"type": "string"
+				},
+				"requestUserId": {
+					"type": "string"
+				},
+				"recipientUserId": {
+					"type": "string"
+				},
+				"status": {
+					"$ref": "#/definitions/FRIEND_REQUEST_STATUS"
+				}
+			},
+			"required": [
+				"id",
+				"requestUserId",
+				"recipientUserId",
+				"status"
 			],
 			"type": "object",
 			"additionalProperties": false
@@ -72,6 +112,20 @@
 							"required": [
 								"token",
 								"user"
+							],
+							"type": "object"
+						}
+					},
+					"404": {
+						"description": "",
+						"schema": {
+							"properties": {
+								"message": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"message"
 							],
 							"type": "object"
 						}
@@ -156,6 +210,55 @@
 				"summary": "Goodbye my friend",
 				"tags": [
 					"auth"
+				],
+				"security": [
+					{
+						"X-Auth-Jwt-Cookie": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "requestBody",
+						"required": true,
+						"schema": {
+							"type": "object"
+						}
+					}
+				]
+			}
+		},
+		"/friend-requests/create-request": {
+			"post": {
+				"operationId": "CreateRequest",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/IFriendRequestOutputDTO"
+						}
+					},
+					"404": {
+						"description": "",
+						"schema": {
+							"properties": {
+								"message": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"message"
+							],
+							"type": "object"
+						}
+					}
+				},
+				"summary": "Create new friend request",
+				"tags": [
+					"friend-requests"
 				],
 				"security": [
 					{

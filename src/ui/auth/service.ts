@@ -3,24 +3,26 @@ import { randomBytes } from 'crypto';
 import jwt from 'jsonwebtoken';
 import randtoken from 'rand-token';
 
-import { IUserInputDTO, IUserOutputDTO } from '@/core/application/user';
-import { IUserRepository } from '@/core/domainService/user';
+import { IUserInputDTO, IUserOutputDTO, IUserRepository } from '@/core/domainService/user';
 import config from '@/crossCutting/config';
-// import RedisService from '@/crossCutting/redis';
-import { NotFoundResponse } from '@/crossCutting/responseHandler/httpResponse';
 import { UserRepository } from '@/infrastructure/database/repositories/user';
 import { inject, provideSingleton } from '@/infrastructure/ioc';
+import { RedisService } from '@/infrastructure/redis';
 
 import { REDIS_SUFFIX } from './constants';
 import { IAuthService } from '@/core/application/auth';
+import IRedisService from '@/infrastructure/redis/interface';
 // import MailerService from './mailer';
 
 @provideSingleton(AuthService)
 export class AuthService implements IAuthService {
-  constructor(@inject(UserRepository) private readonly userRepository: IUserRepository) {}
+  constructor(
+    @inject(UserRepository) private readonly userRepository: IUserRepository,
+    @inject(RedisService) private redis: IRedisService,
+  ) {}
 
-  private redisKey = (userId: string) => {
-    return `user:${userId}:${REDIS_SUFFIX.refreshToken}`;
+  private redisKey = (username: string) => {
+    return `user:${username}:${REDIS_SUFFIX.refreshToken}`;
   };
 
   private generateToken(user: IUserOutputDTO) {
@@ -65,9 +67,9 @@ export class AuthService implements IAuthService {
       // await this.mailer.SendWelcomeEmail(userRecord);
       // this.eventDispatcher.dispatch(events.user.signUp, { user });
 
-      return { user, token };
+      return { user: user, token };
     } catch (e) {
-      throw e;
+      throw new Error(e.message);
     }
   }
 
@@ -88,7 +90,7 @@ export class AuthService implements IAuthService {
         const token = this.generateToken(user);
 
         const refreshKey = randtoken.uid(256);
-        // await this.redis.setArray(this.redisKey(user.id), [refreshKey]);
+        await this.redis.setArray(this.redisKey(user.username), [refreshKey]);
 
         const refreshToken = this.generateRefreshToken(user, refreshKey);
 
@@ -96,10 +98,10 @@ export class AuthService implements IAuthService {
         Reflect.deleteProperty(user, 'salt');
         return { user, token, refreshToken };
       } else {
-        throw new NotFoundResponse('Invalid Password! Please check your password and try again.');
+        throw new Error('Invalid Password! Please check your password and try again.');
       }
     } catch (e) {
-      throw e;
+      throw new Error(e.message);
     }
   }
 

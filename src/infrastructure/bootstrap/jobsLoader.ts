@@ -1,7 +1,7 @@
 import Agenda from 'agenda';
 
 import config from '@/crossCutting/config';
-import EmailSequenceJob from '@/crossCutting/mailer/jobs/emailSequence';
+import EmailSequenceJob from '@/infrastructure/mailer/emailSequence';
 
 async function sendWelcomeEmail(agenda: Agenda): Promise<void> {
   agenda.define(

@@ -19,8 +19,8 @@ const swaggerDoc = require('@/swagger.json');
 
 import './events';
 import expressLoader, { App } from './express';
-import agendaFactory from './jobScheduler/agenda';
-import { jobsLoader } from './jobScheduler/jobs';
+import agendaFactory from './agenda';
+import { jobsLoader } from './jobsLoader';
 
 export function exitProcess(error: any): void {
   logger.error(`❌  ${error}`);

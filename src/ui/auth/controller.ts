@@ -1,6 +1,7 @@
-import { Body, Controller, Post, Request, Res, Route, Security, Tags, TsoaResponse } from 'tsoa';
+import { Request as ERequest } from 'express';
+import { Body, Controller, Header, Post, Request, Res, Route, Security, Tags, TsoaResponse } from 'tsoa';
 
-import { IUserOutputDTO } from '@/core/application/user';
+import { IUserOutputDTO } from '@/core/domainService/user';
 import { provideSingleton } from '@/infrastructure/ioc';
 
 import { COOKIE_KEY, COOKIE_EXPIRATION } from './constants';
@@ -18,9 +19,16 @@ export class AuthController extends Controller {
    * @summary Create user
    */
   @Post('/signup')
-  public async SignUp(@Body() requestBody: any): Promise<{ user: IUserOutputDTO; token: string }> {
-    const { user, token } = await this.authService.signUp(requestBody);
-    return { user, token };
+  public async SignUp(
+    @Body() requestBody: any,
+    @Res() errorResponse: TsoaResponse<404, { message: string }>,
+  ): Promise<{ user: IUserOutputDTO; token: string }> {
+    try {
+      const { user, token } = await this.authService.signUp(requestBody);
+      return { user, token };
+    } catch (e) {
+      return errorResponse(e.statusCode, { message: e.message });
+    }
   }
 
   /**
@@ -71,8 +79,9 @@ export class AuthController extends Controller {
    */
   @Security('X-Auth-Jwt-Cookie')
   @Post('/signout')
-  public async SignOut(@Request() request: any, @Body() requestBody: any): Promise<string> {
+  public async SignOut(@Request() request: ERequest, @Body() requestBody: any): Promise<string> {
     try {
+      console.log('request: ', request.cookies);
       // request.user
       // await this.authService.SignOut(req.refreshToken, requestBody);
 
