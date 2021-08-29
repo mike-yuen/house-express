@@ -3,8 +3,7 @@ import { randomBytes } from 'crypto';
 import jwt from 'jsonwebtoken';
 import randtoken from 'rand-token';
 
-import { IUserInputDTO, IUserOutputDTO } from '@/core/application/user';
-import { IUserRepository } from '@/core/domainService/user';
+import { IUserInputDTO, IUserOutputDTO, IUserRepository } from '@/core/domainService/user';
 import config from '@/crossCutting/config';
 import { UserRepository } from '@/infrastructure/database/repositories/user';
 import { inject, provideSingleton } from '@/infrastructure/ioc';

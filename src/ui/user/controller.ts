@@ -1,9 +1,11 @@
 import { Controller, Get, Route, Tags } from 'tsoa';
 
-import { IUserService, IUserOutputDTO } from '@/core/application/user';
+import { IUserService } from '@/core/application/user';
+import { IUserOutputDTO } from '@/core/domainService/user';
 import { inject, provideSingleton } from '@/infrastructure/ioc';
 
 import { UserService } from './service';
+
 @Route('users')
 @Tags('users')
 @provideSingleton(UserController)

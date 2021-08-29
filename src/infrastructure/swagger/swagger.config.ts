@@ -4,7 +4,6 @@ import config from '@/crossCutting/config';
 const basePath = config.api.prefix;
 const entryFile = 'src/app.ts';
 const controllers = 'src/ui/**/controller.ts';
-const protocol = 'http';
 const outputDirectory = 'src';
 
 export const generateSwagger = async () => {

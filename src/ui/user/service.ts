@@ -1,5 +1,5 @@
-import { IUserService, IUserOutputDTO } from '@/core/application/user';
-import { IUserRepository } from '@/core/domainService/user';
+import { IUserService } from '@/core/application/user';
+import { IUserOutputDTO, IUserRepository } from '@/core/domainService/user';
 import { inject, provideSingleton } from '@/infrastructure/ioc';
 import { UserRepository } from '@/infrastructure/database/repositories/user';
 

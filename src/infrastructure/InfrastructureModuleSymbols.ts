@@ -4,5 +4,6 @@ export const INFRASTRUCTURE_IDENTIFIERS = {
   EVENT_DISPATCHER: Symbol('EventDispatcher'),
   REDIS: Symbol('Redis'),
 
+  FRIEND_REQUEST_MODEL: Symbol('FriendRequestModel'),
   USER_MODEL: Symbol('UserModel'),
 };

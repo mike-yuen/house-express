@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { BaseEntity } from './_base';
 
 export enum USER_ROLES {
@@ -13,7 +14,8 @@ export class User extends BaseEntity {
     public readonly email: string,
     public readonly password: string,
     public readonly salt: string,
-    public readonly role: string,
+    public readonly role: USER_ROLES,
+    public readonly friendIds: Array<mongoose.Types.ObjectId>,
   ) {
     super();
   }
