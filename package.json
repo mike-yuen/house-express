@@ -7,7 +7,7 @@
   "main": "src/app.ts",
   "scripts": {
     "postinstall": "npm install -g mongodb && npm run build",
-    "build": "tsc && cp ./.env ./build",
+    "build": "tsc",
     "dev": "nodemon",
     "start": "node ./build/app.js",
     "inspect": "nodemon --inspect src/app.ts",
