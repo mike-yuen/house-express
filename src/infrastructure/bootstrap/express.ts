@@ -21,7 +21,12 @@ export default (app: express.Application) => {
   app.enable('trust proxy');
 
   // Enable Cross Origin Resource Sharing to all origins by default
-  app.use(cors());
+  app.use(
+    cors({
+      credentials: true,
+      origin: ['http://localhost:3000', 'http://localhost:6006', 'https://mikeyuen.netlify.app'],
+    }),
+  );
 
   // Middleware that transforms the raw string of req.body into json
   app.use(express.json());
@@ -37,10 +42,14 @@ export default (app: express.Application) => {
 
   // Custom error handlers
   app.use(async (err: any, req: Request, res: Response, next: NextFunction) => {
+    // res.header('Access-Control-Allow-Origin', '*');
+    // res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+
     if (!responseHandler.isTrustedError(err)) {
       await responseHandler.handleCelebrateError(err, res, next);
       return next(err);
     }
     await responseHandler.handleError(err, res);
+    // next();
   });
 };

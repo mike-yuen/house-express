@@ -308,7 +308,7 @@
 	],
 	"swagger": "2.0",
 	"securityDefinitions": {},
-	"host": "localhost:3000",
+	"host": "localhost:3333",
 	"tags": [
 		{
 			"name": "auth",
