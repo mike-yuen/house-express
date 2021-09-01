@@ -7,9 +7,7 @@ import { X_AUTH_JWT_COOKIE } from '@/infrastructure/common/constants';
 import { COOKIE_KEY } from '@/ui/auth/constants';
 
 function getTokenFromCookie(req: Request, tokenType: string) {
-  console.log('____0');
   if (req.cookies && req.cookies[tokenType]) {
-    console.log('____1', tokenType);
     return req.cookies[tokenType];
   }
   throw new Error();
