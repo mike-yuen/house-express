@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import { BaseEntity } from './_base';
 
 export enum FRIEND_REQUEST_STATUS {
@@ -9,8 +8,8 @@ export enum FRIEND_REQUEST_STATUS {
 
 export class FriendRequest extends BaseEntity {
   constructor(
-    public readonly requestUserId: mongoose.Types.ObjectId,
-    public readonly recipientUserId: mongoose.Types.ObjectId,
+    public readonly requestUserId: string,
+    public readonly recipientUserId: string,
     public readonly status: FRIEND_REQUEST_STATUS,
   ) {
     super();

@@ -1,12 +1,10 @@
-import mongoose from 'mongoose';
-
 import { FRIEND_REQUEST_STATUS } from '@/core/domainModel/friendRequest';
 
 import { IBaseRepository } from './_base';
 
 export interface IFriendRequestInputDTO {
-  requestUserId: mongoose.Types.ObjectId;
-  recipientUserId: mongoose.Types.ObjectId;
+  requestUserId: string;
+  recipientUserId: string;
   status: FRIEND_REQUEST_STATUS;
 }
 
