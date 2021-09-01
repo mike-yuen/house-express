@@ -6,6 +6,7 @@
   "license": "MIT",
   "main": "src/app.ts",
   "scripts": {
+    "postinstall": "npm run build",
     "build": "tsc && cp ./.env ./build",
     "dev": "nodemon",
     "start": "node ./build/app.js",
