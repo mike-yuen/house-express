@@ -24,7 +24,12 @@ export default (app: express.Application) => {
   app.use(
     cors({
       credentials: true,
-      origin: ['http://localhost:3000', 'http://localhost:6006', 'https://mikeyuen.netlify.app'],
+      origin: [
+        'http://localhost:3000',
+        'http://localhost:6006',
+        'http://localhost.com:3000',
+        'https://mikeyuen.netlify.app',
+      ],
     }),
   );
 
