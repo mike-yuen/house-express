@@ -46,8 +46,8 @@ export class AuthController extends Controller {
       // Add Secure in production
       if (token && refreshToken) {
         this.setHeader('Set-Cookie', [
-          `${COOKIE_KEY.token}=${token}; HttpOnly; Max-Age=${COOKIE_EXPIRATION.token}`,
-          `${COOKIE_KEY.refreshToken}=${refreshToken}; HttpOnly; Max-Age=${COOKIE_EXPIRATION.refreshToken}`,
+          `${COOKIE_KEY.token}=${token}; Max-Age=${COOKIE_EXPIRATION.token}; SameSite=None; Secure; HttpOnly;`,
+          `${COOKIE_KEY.refreshToken}=${refreshToken}; Max-Age=${COOKIE_EXPIRATION.refreshToken}; SameSite=None; Secure; HttpOnly;`,
         ]);
       }
 
