@@ -15,6 +15,7 @@
     "lint": "eslint --ignore-path .gitignore --ext .ts src/ --fix"
   },
   "dependencies": {
+    "@sendgrid/mail": "7.4.6",
     "agenda": "3.1.0",
     "agendash": "1.0.0",
     "argon2": "0.27.0",
@@ -45,6 +46,7 @@
     "morgan": "1.10.0",
     "rand-token": "1.0.1",
     "reflect-metadata": "0.1.13",
+    "spark-md5": "3.0.2",
     "swagger-jsdoc": "6.0.0",
     "swagger-ui-express": "4.1.6",
     "tsoa": "3.8.0",

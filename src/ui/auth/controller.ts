@@ -1,11 +1,14 @@
 import { Request as ERequest } from 'express';
-import { Body, Controller, Header, Post, Request, Res, Route, Security, Tags, TsoaResponse } from 'tsoa';
+import { Body, Controller, Post, Request, Res, Route, Security, Tags, TsoaResponse } from 'tsoa';
 
+import { COOKIE_KEY, ISignInInput, ISignInOutput } from '@/core/application/auth';
 import { IUserOutputDTO } from '@/core/domainService/user';
-import { provideSingleton } from '@/infrastructure/ioc';
+import { inject, provideSingleton } from '@/infrastructure/ioc';
 
-import { COOKIE_KEY, COOKIE_EXPIRATION } from './constants';
+import { COOKIE_EXPIRATION } from './constants';
 import { AuthService } from './service';
+import { MailerService } from '@/infrastructure/mailer/service';
+// import { MailerService } from '@/infrastructure/mailer/service';
 
 @Route('auth')
 @Tags('auth')
@@ -22,10 +25,10 @@ export class AuthController extends Controller {
   public async SignUp(
     @Body() requestBody: any,
     @Res() errorResponse: TsoaResponse<404, { message: string }>,
-  ): Promise<{ user: IUserOutputDTO; token: string }> {
+  ): Promise<{ user: IUserOutputDTO }> {
     try {
-      const { user, token } = await this.authService.signUp(requestBody);
-      return { user, token };
+      const { user } = await this.authService.signUp(requestBody);
+      return { user };
     } catch (e) {
       return errorResponse(e.statusCode, { message: e.message });
     }
@@ -36,22 +39,20 @@ export class AuthController extends Controller {
    */
   @Post('/signin')
   public async SignIn(
-    @Body() requestBody: any,
+    @Body() requestBody: ISignInInput,
     @Res() errorResponse: TsoaResponse<404, { message: string }>,
-  ): Promise<IUserOutputDTO> {
+  ): Promise<ISignInOutput> {
     try {
       const { email, password } = requestBody;
       const { user, token, refreshToken } = await this.authService.signIn(email, password);
 
-      // Add Secure in production
       if (token && refreshToken) {
-        this.setHeader('Set-Cookie', [
-          `${COOKIE_KEY.token}=${token}; Max-Age=${COOKIE_EXPIRATION.token}; SameSite=None; Secure; HttpOnly;`,
-          `${COOKIE_KEY.refreshToken}=${refreshToken}; Max-Age=${COOKIE_EXPIRATION.refreshToken}; Domain=.mikeyuen.netlify.app; SameSite=None; HttpOnly;`,
-        ]);
+        return {
+          user,
+          [COOKIE_KEY.token]: { value: token, maxAge: COOKIE_EXPIRATION.token },
+          [COOKIE_KEY.refreshToken]: { value: refreshToken, maxAge: COOKIE_EXPIRATION.refreshToken },
+        };
       }
-
-      return user;
     } catch (e) {
       return errorResponse(e.statusCode, { message: e.message });
     }
@@ -74,22 +75,24 @@ export class AuthController extends Controller {
   //   }
   // };
 
+  @Post('/verify-email')
+  public async VerifyEmail(@Request() request: any, @Body() requestBody: any): Promise<string> {
+    try {
+      // await this.mailer.sendEmailVerification(requestBody.email);
+      return 'User logged out successfully';
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   /**
    * @summary Goodbye my friend
    */
-  @Security('X-Auth-Jwt-Cookie')
+  @Security('Authorization')
   @Post('/signout')
-  public async SignOut(@Request() request: ERequest, @Body() requestBody: any): Promise<string> {
+  public async SignOut(@Request() request: any, @Body() requestBody: any): Promise<string> {
     try {
-      console.log('request: ', request.cookies);
-      // request.user
-      // await this.authService.SignOut(req.refreshToken, requestBody);
-
-      this.setHeader('Set-Cookie', [
-        `${COOKIE_KEY.token}=""; HttpOnly; Max-Age=0;`,
-        `${COOKIE_KEY.refreshToken}=""; HttpOnly; Max-Age=0`,
-      ]);
-
+      await this.authService.SignOut(request.user.refreshToken, requestBody);
       return 'User logged out successfully';
     } catch (e) {
       console.log(e);

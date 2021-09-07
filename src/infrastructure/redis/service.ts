@@ -6,12 +6,12 @@ import isObject from 'lodash/isObject';
 import isUndefined from 'lodash/isUndefined';
 import map from 'lodash/map';
 
-import { iocContainer, provideSingleton, unmanaged } from '@/infrastructure/ioc';
+import { IRedisService } from '@/core/application/redis';
+import { provideSingleton, unmanaged } from '@/infrastructure/ioc';
 import { ILoggerService } from '@/crossCutting/logger/interface';
 import { LoggerService } from '@/crossCutting/logger';
 
 import { RedisInstance } from './instance';
-import IRedisService from './interface';
 
 @provideSingleton(RedisService)
 export class RedisService implements IRedisService {

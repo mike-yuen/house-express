@@ -1,35 +1,55 @@
-import { Service, Inject } from 'typedi';
+import sgMail from '@sendgrid/mail';
+import fs from 'fs';
+import Handlebars from 'handlebars';
+import path from 'path';
+import Util from 'util';
 
-import { User } from '@/core/domainModel/user';
+import { IMailerService } from '@/core/application/mailer';
+import { provideSingleton } from '@/infrastructure/ioc';
 
-@Service()
-export default class MailerService {
-  constructor(@Inject('emailClient') private emailClient) {}
+const ReadFile = Util.promisify(fs.readFile);
 
-  public async SendWelcomeEmail(email) {
-    // Added example for sending mail from mailgun
+@provideSingleton(MailerService)
+export class MailerService implements IMailerService {
+  private sgMail: any;
+
+  constructor() {
+    this.sgMail = sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+  }
+
+  public async sendEmailVerification(to: string, code: number): Promise<{ delivered: number; status: string }> {
+    const templatePath = path.resolve(__dirname, './templates', 'verifyEmail.html');
+    const content = await ReadFile(templatePath, 'utf8');
+    const template = Handlebars.compile(content);
+    const html = template({ verificationCode: code });
     const data = {
-      from: 'Excited User <me@samples.mailgun.org>',
-      to: email, //your email address
-      subject: 'Hello',
-      text: 'Testing some Mailgun awesomness!',
+      from: 'Mikey <nhatminh.150596@gmail.com>',
+      to: to, // your email address
+      subject: 'Email Confirmation',
+      html,
     };
-
-    this.emailClient.messages().send(data);
+    this.sgMail
+      .send(data)
+      .then(() => {
+        console.log('success');
+      })
+      .catch((e: any) => {
+        console.log('failed', e.response.body.errors);
+      });
     return { delivered: 1, status: 'ok' };
   }
 
-  public StartEmailSequence(sequence: string, user: Partial<User>) {
-    if (!user.email) {
-      throw new Error('No email provided');
-    }
-    // @TODO Add example of an email sequence implementation
-    // Something like
-    // 1 - Send first email of the sequence
-    // 2 - Save the step of the sequence in database
-    // 3 - Schedule job for second email in 1-3 days or whatever
-    // Every sequence can have its own behavior so maybe
-    // the pattern Chain of Responsibility can help here.
-    return { delivered: 1, status: 'ok' };
-  }
+  // public startEmailSequence(sequenceType: string, user: Partial<User>) {
+  //   if (!user.email) {
+  //     throw new Error('No email provided');
+  //   }
+  //   // @TODO Add example of an email sequence implementation
+  //   // Something like
+  //   // 1 - Send first email of the sequence
+  //   // 2 - Save the step of the sequence in database
+  //   // 3 - Schedule job for second email in 1-3 days or whatever
+  //   // Every sequence can have its own behavior so maybe
+  //   // the pattern Chain of Responsibility can help here.
+  //   return { delivered: 1, status: 'ok' };
+  // }
 }

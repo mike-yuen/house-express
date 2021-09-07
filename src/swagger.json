@@ -17,9 +17,6 @@
 				"id": {
 					"type": "string"
 				},
-				"username": {
-					"type": "string"
-				},
 				"displayName": {
 					"type": "string"
 				},
@@ -34,13 +31,64 @@
 				},
 				"role": {
 					"$ref": "#/definitions/USER_ROLES"
+				},
+				"avatar": {
+					"type": "string"
+				},
+				"active": {
+					"type": "boolean"
 				}
 			},
 			"required": [
 				"id",
-				"username",
 				"email",
-				"role"
+				"role",
+				"avatar"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"ISignInOutput": {
+			"properties": {
+				"user": {
+					"$ref": "#/definitions/IUserOutputDTO"
+				},
+				"undefined": {
+					"properties": {
+						"maxAge": {
+							"type": "number",
+							"format": "double"
+						},
+						"value": {
+							"type": "string"
+						}
+					},
+					"required": [
+						"maxAge",
+						"value"
+					],
+					"type": "object"
+				}
+			},
+			"required": [
+				"user",
+				null
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"ISignInInput": {
+			"properties": {
+				"email": {
+					"type": "string"
+				},
+				"password": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"email",
+				"password"
 			],
 			"type": "object",
 			"additionalProperties": false
@@ -102,15 +150,11 @@
 						"description": "Ok",
 						"schema": {
 							"properties": {
-								"token": {
-									"type": "string"
-								},
 								"user": {
 									"$ref": "#/definitions/IUserOutputDTO"
 								}
 							},
 							"required": [
-								"token",
 								"user"
 							],
 							"type": "object"
@@ -158,7 +202,7 @@
 					"200": {
 						"description": "Ok",
 						"schema": {
-							"$ref": "#/definitions/IUserOutputDTO"
+							"$ref": "#/definitions/ISignInOutput"
 						}
 					},
 					"404": {
@@ -177,6 +221,36 @@
 					}
 				},
 				"summary": "Login to an awesome site",
+				"tags": [
+					"auth"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "requestBody",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/ISignInInput"
+						}
+					}
+				]
+			}
+		},
+		"/auth/verify-email": {
+			"post": {
+				"operationId": "VerifyEmail",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"type": "string"
+						}
+					}
+				},
 				"tags": [
 					"auth"
 				],
@@ -213,7 +287,7 @@
 				],
 				"security": [
 					{
-						"X-Auth-Jwt-Cookie": []
+						"Authorization": []
 					}
 				],
 				"parameters": [
@@ -262,7 +336,7 @@
 				],
 				"security": [
 					{
-						"X-Auth-Jwt-Cookie": []
+						"Authorization": []
 					}
 				],
 				"parameters": [
@@ -307,7 +381,13 @@
 		"application/json"
 	],
 	"swagger": "2.0",
-	"securityDefinitions": {},
+	"securityDefinitions": {
+		"Authorization": {
+			"type": "apiKey",
+			"in": "header",
+			"name": "Authorization"
+		}
+	},
 	"host": "localhost:8188",
 	"tags": [
 		{

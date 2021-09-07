@@ -9,12 +9,6 @@ const transform = (doc: mongoose.Document, ret: any) => {
 
 const UserSchema = new mongoose.Schema(
   {
-    username: {
-      type: String,
-      required: [true, 'Please enter username'],
-      unique: [true, 'Username must be unique'],
-      index: true,
-    },
     email: {
       type: String,
       lowercase: true,
@@ -33,6 +27,14 @@ const UserSchema = new mongoose.Schema(
       enum: Object.values(USER_ROLES),
       default: USER_ROLES.USER,
     },
+    avatar: String,
+    friendIds: [
+      {
+        type: String,
+      },
+    ],
+    active: Boolean,
+    verificationCode: Number,
 
     lastLogin: {
       type: Date,

@@ -18,7 +18,7 @@ export class FriendRequestController extends Controller {
   /**
    * @summary Create new friend request
    */
-  @Security('X-Auth-Jwt-Cookie')
+  @Security('Authorization')
   @Post('/create-request')
   public async createRequest(
     @Request() request: ERequest,
