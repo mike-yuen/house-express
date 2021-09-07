@@ -3,7 +3,6 @@ import { celebrate, Joi, Segments } from 'celebrate';
 export const SignUpSchema = celebrate(
   {
     [Segments.BODY]: Joi.object({
-      username: Joi.string().required().min(3).max(128).trim(),
       email: Joi.string().required().min(8).max(254).lowercase().trim(),
       password: Joi.string().required(),
       // passwordConfirmation: Joi.valid(Joi.ref('password')).required(),

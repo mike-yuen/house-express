@@ -1,5 +1,5 @@
 enum MailJobType {
-  SEND_WELCOME_MAIL,
+  SEND_EMAIL_VERIFICATION,
 }
 
 export interface IMailerService {
@@ -12,7 +12,7 @@ export interface IMailerService {
    * @returns {Promise<boolean>}
    * @memberof IMailService
    */
-  sendWelcomeEmail(to: string, subject: string, text: string): Promise<boolean>;
+  sendEmailVerification(to: string, code: number): Promise<{ delivered: number; status: string }>;
 
   /**
    *
@@ -21,5 +21,5 @@ export interface IMailerService {
    * @param {*} data
    * @memberof IMailService
    */
-  startEmailSequence(sequenceType: MailJobType, data: any): void;
+  // startEmailSequence(sequenceType: MailJobType, data: any): void;
 }

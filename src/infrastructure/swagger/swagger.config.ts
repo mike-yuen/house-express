@@ -31,6 +31,13 @@ export const generateSwagger = async () => {
       },
     ],
     schemes: ['http', 'https'],
+    securityDefinitions: {
+      'Authorization': {
+        type: 'apiKey',
+        in: 'header',
+        name: 'Authorization',
+      },
+    },
   };
 
   const routeOptions: RoutesConfig = {
