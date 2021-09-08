@@ -24,17 +24,9 @@ export default (app: express.Application) => {
   app.use(
     cors({
       origin: ['http://localhost:3000', 'http://localhost:6006', 'https://mikeyuen.netlify.app'],
-      methods: ['POST', 'PUT', 'GET', 'DELETE', 'OPTIONS', 'HEAD'],
       credentials: true,
     }),
   );
-
-  app.use(function (req, res, next) {
-    res.header('Access-Control-Allow-Origin', req.headers.origin);
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
-    next();
-  });
 
   // Middleware that transforms the raw string of req.body into json
   app.use(express.json());

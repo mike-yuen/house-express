@@ -79,7 +79,7 @@ export class AuthService implements IAuthService {
       this.mailer.sendEmailVerification(user.email, verificationCode);
       // this.eventDispatcher.dispatch(events.user.signUp, { user });
 
-      return { user: user };
+      return { user };
     } catch (e) {
       if (e.code === 11000) {
         throw new NotFoundResponse('Duplicate key in database', { statusCode: 11000 });
@@ -94,6 +94,10 @@ export class AuthService implements IAuthService {
   ): Promise<{ user: IUserOutputDTO; token: string; refreshToken: string }> {
     try {
       const user = await this.userRepository.findOne({ email }, {}, {});
+
+      if (!user.active) {
+        throw new NotFoundResponse('This account is not active. Please active your email first.');
+      }
 
       /* We use verify from argon2 to prevent 'timing based' attacks */
       // this.logger.silly('Checking password');
@@ -114,6 +118,29 @@ export class AuthService implements IAuthService {
         return { user, token, refreshToken };
       } else {
         throw new NotFoundResponse('Invalid Password! Please check your password and try again.');
+      }
+    } catch (e) {
+      throw new NotFoundResponse(e.message);
+    }
+  }
+
+  public async verifyEmail(email: string, code: string): Promise<{ user: IUserOutputDTO }> {
+    try {
+      const user = await this.userRepository.findOne({ email }, {}, {});
+
+      const active = user.verificationCode.toString() === code;
+
+      if (active) {
+        await this.userRepository.updateOne({ email }, { active: true }, {});
+
+        Reflect.deleteProperty(user, 'password');
+        Reflect.deleteProperty(user, 'salt');
+        Reflect.deleteProperty(user, 'friendIds');
+        Reflect.deleteProperty(user, 'verificationCode');
+
+        return { user };
+      } else {
+        throw new NotFoundResponse('Invalid verification code.');
       }
     } catch (e) {
       throw new NotFoundResponse(e.message);

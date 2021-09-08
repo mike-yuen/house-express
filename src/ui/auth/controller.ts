@@ -76,12 +76,17 @@ export class AuthController extends Controller {
   // };
 
   @Post('/verify-email')
-  public async VerifyEmail(@Request() request: any, @Body() requestBody: any): Promise<string> {
+  public async VerifyEmail(
+    @Request() request: any,
+    @Body() requestBody: any,
+    @Res() errorResponse: TsoaResponse<404, { message: string }>,
+  ): Promise<{ user: IUserOutputDTO }> {
     try {
-      // await this.mailer.sendEmailVerification(requestBody.email);
-      return 'User logged out successfully';
+      const { email, code } = requestBody;
+      const { user } = await this.authService.verifyEmail(email, code);
+      return { user };
     } catch (e) {
-      console.log(e);
+      return errorResponse(e.statusCode, { message: e.message });
     }
   }
 

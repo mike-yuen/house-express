@@ -32,6 +32,7 @@ const models: TsoaRoute.Models = {
             "role": {"ref":"USER_ROLES","required":true},
             "avatar": {"dataType":"string","required":true},
             "active": {"dataType":"boolean"},
+            "verificationCode": {"dataType":"double"},
         },
         "additionalProperties": false,
     },
@@ -141,6 +142,7 @@ export function RegisterRoutes(app: express.Router) {
             const args = {
                     request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     requestBody: {"in":"body","name":"requestBody","required":true,"dataType":"any"},
+                    errorResponse: {"in":"res","name":"404","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"message":{"dataType":"string","required":true}}},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

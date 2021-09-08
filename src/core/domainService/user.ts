@@ -22,6 +22,7 @@ export interface IUserOutputDTO {
   role: USER_ROLES;
   avatar: string;
   active?: boolean;
+  verificationCode?: number;
 }
 
 export type IUserRepository = IBaseRepository<IUserInputDTO, IUserOutputDTO>;
