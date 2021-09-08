@@ -9,10 +9,10 @@ export default class EmailSequenceJob {
 
     try {
       Logger.debug('✌️ Email Sequence Job triggered!');
-      const { email, name }: { [key: string]: string } = job.attrs.data;
+      const { email, code } = job.attrs.data;
       const mailerServiceInstance = Container.get(MailerService);
 
-      await mailerServiceInstance.sendEmailVerification(email);
+      await mailerServiceInstance.sendEmailVerification(email, code);
       done();
     } catch (e) {
       Logger.error('🔥 Error with Email Sequence Job: %o', e);
