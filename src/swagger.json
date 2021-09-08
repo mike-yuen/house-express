@@ -37,6 +37,10 @@
 				},
 				"active": {
 					"type": "boolean"
+				},
+				"verificationCode": {
+					"type": "number",
+					"format": "double"
 				}
 			},
 			"required": [
@@ -247,7 +251,29 @@
 					"200": {
 						"description": "Ok",
 						"schema": {
-							"type": "string"
+							"properties": {
+								"user": {
+									"$ref": "#/definitions/IUserOutputDTO"
+								}
+							},
+							"required": [
+								"user"
+							],
+							"type": "object"
+						}
+					},
+					"404": {
+						"description": "",
+						"schema": {
+							"properties": {
+								"message": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"message"
+							],
+							"type": "object"
 						}
 					}
 				},
