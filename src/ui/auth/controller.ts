@@ -47,6 +47,7 @@ export class AuthController extends Controller {
       const { user, token, refreshToken } = await this.authService.signIn(email, password);
 
       if (token && refreshToken) {
+        this.setHeader('Set-Cookie', [`testToken=${token}; HttpOnly; Secure; Same-Site=None`]);
         return {
           user,
           [COOKIE_KEY.token]: { value: token, maxAge: COOKIE_EXPIRATION.token },
