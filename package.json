@@ -7,7 +7,7 @@
   "main": "src/app.ts",
   "scripts": {
     "postinstall": "npm install -g mongodb && npm run build",
-    "build": "tsc && cp ./src/swagger.json ./build",
+    "build": "tsc && cp ./src/swagger.json ./build && cp -r ./src/infrastructure/mailer/templates ./build/infrastructure/mailer",
     "dev": "nodemon",
     "start": "node ./build/app.js",
     "inspect": "nodemon --inspect src/app.ts",
