@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package auth;
+
+service AuthProtoService {
+  rpc Verify (AuthREQ) returns (AuthRES);
+}
+
+message AuthREQ {
+  string token = 1;
+}
+
+message AuthRES {
+  string uuid = 1;
+}

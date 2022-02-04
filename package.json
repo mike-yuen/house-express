@@ -7,7 +7,9 @@
   "main": "src/app.ts",
   "scripts": {
     "postinstall": "npm install -g mongodb && npm run build",
-    "build": "tsc && cp ./src/swagger.json ./build && cp -r ./src/infrastructure/mailer/templates ./build/infrastructure/mailer",
+    "copy:template": "cp ./src/swagger.json ./build && cp -r ./src/infrastructure/mailer/templates ./build/infrastructure/mailer",
+    "copy:proto": "cp -r ./src/ui/gRPC/proto ./build/ui/gRPC",
+    "build": "rm -rf build && tsc && npm run copy:template && npm run copy:proto",
     "dev": "nodemon",
     "start": "node ./build/app.js",
     "inspect": "nodemon --inspect src/app.ts",
@@ -15,6 +17,7 @@
     "lint": "eslint --ignore-path .gitignore --ext .ts src/ --fix"
   },
   "dependencies": {
+    "@grpc/proto-loader": "^0.6.7",
     "@sendgrid/mail": "7.4.6",
     "agenda": "3.1.0",
     "agendash": "1.0.0",
@@ -30,6 +33,7 @@
     "express": "4.17.1",
     "express-basic-auth": "1.2.0",
     "express-jwt": "6.0.0",
+    "grpc": "^1.24.11",
     "helmet": "4.6.0",
     "inversify": "5.1.1",
     "inversify-binding-decorators": "4.0.0",

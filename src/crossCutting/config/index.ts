@@ -11,7 +11,8 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 export default {
-  port: parseInt(process.env.PORT, 10),
+  httpPort: parseInt(process.env.HTTP_PORT, 10),
+  grpcPort: parseInt(process.env.GRPC_PORT, 10),
 
   databaseURL: process.env.MONGODB_URI,
 
