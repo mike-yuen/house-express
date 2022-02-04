@@ -23,7 +23,7 @@ export default (app: express.Application) => {
   // Enable Cross Origin Resource Sharing to all origins by default
   app.use(
     cors({
-      origin: ['http://localhost:3000', 'http://localhost:6006', 'https://mikeyuen.netlify.app'],
+      origin: ['http://localhost:3000', 'https://mikeyuen.netlify.app'],
       credentials: true,
     }),
   );
@@ -37,19 +37,12 @@ export default (app: express.Application) => {
 
   app.use(cookieParser());
 
-  // Load API routes
-  // app.use(config.api.prefix, routes());
-
   // Custom error handlers
   app.use(async (err: any, req: Request, res: Response, next: NextFunction) => {
-    // res.header('Access-Control-Allow-Origin', '*');
-    // res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-
     if (!responseHandler.isTrustedError(err)) {
       await responseHandler.handleCelebrateError(err, res, next);
       return next(err);
     }
     await responseHandler.handleError(err, res);
-    // next();
   });
 };

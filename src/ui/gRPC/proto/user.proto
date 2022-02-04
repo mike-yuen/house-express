@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package user;
+
+service UserProtoService {
+  rpc Create (CreateUserREQ) returns (CreateUserRES);
+}
+
+message CreateUserREQ {
+  string id = 1;
+  string email = 2;
+  string displayName = 3;
+  int32 vipType = 4;
+  int32 gender = 5;
+  int32 coin = 6;
+  int32 level = 7;
+  int32 experience = 8;
+  string avatar = 9;
+}
+
+message CreateUserRES {
+  int32 code = 1;
+}

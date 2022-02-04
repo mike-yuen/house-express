@@ -28,7 +28,7 @@ export function exitProcess(error: any): void {
 }
 
 export function startAppServer(app: App, serverPort?: number): Server {
-  const port = serverPort || config.port;
+  const port = serverPort || config.httpPort;
 
   return app
     .listen(port, () => {
@@ -59,11 +59,6 @@ async function bootstrap(): Promise<App> {
   const server = new InversifyExpressServer(iocContainer, null, null, null, null, false);
   server.setConfig((app: App) => expressLoader(app));
   logger.info('✌️ Express loaded');
-
-  // server.setErrorConfig(app => {
-  //   // Catch and log all exceptions
-  //   app.use(exceptionLoggerMiddleware);
-  // });
 
   const app = server.build() as App;
 

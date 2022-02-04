@@ -8,13 +8,14 @@ import { IAuthService } from '@/core/application/auth';
 import { IRedisService } from '@/core/application/redis';
 import { IUserInputDTO, IUserOutputDTO, IUserRepository } from '@/core/domainService/user';
 import config from '@/crossCutting/config';
+import { NotFoundResponse, UnauthorizedResponse } from '@/crossCutting/responseHandler/httpResponse';
 import { UserRepository } from '@/infrastructure/database/repositories/user';
 import { inject, provideSingleton } from '@/infrastructure/ioc';
 import { MailerService } from '@/infrastructure/mailer/service';
 import { RedisService } from '@/infrastructure/redis/service';
+import createPokerUser from '@/ui/gRPC/client';
 
 import { REDIS_SUFFIX } from './constants';
-import { NotFoundResponse, UnauthorizedResponse } from '@/crossCutting/responseHandler/httpResponse';
 
 @provideSingleton(AuthService)
 export class AuthService implements IAuthService {
@@ -100,12 +101,9 @@ export class AuthService implements IAuthService {
       }
 
       /* We use verify from argon2 to prevent 'timing based' attacks */
-      // this.logger.silly('Checking password');
       const validPassword = await argon2.verify(user.password, password);
 
       if (validPassword) {
-        // this.logger.silly('Password is valid!');
-        // this.logger.silly('Generating JWT');
         const token = this.generateToken(user);
 
         const refreshKey = randtoken.uid(256);
@@ -115,6 +113,8 @@ export class AuthService implements IAuthService {
 
         Reflect.deleteProperty(user, 'password');
         Reflect.deleteProperty(user, 'salt');
+        Reflect.deleteProperty(user, 'friendIds');
+        Reflect.deleteProperty(user, 'verificationCode');
         return { user, token, refreshToken };
       } else {
         throw new NotFoundResponse('Invalid Password! Please check your password and try again.');
@@ -132,12 +132,14 @@ export class AuthService implements IAuthService {
 
       if (active) {
         await this.userRepository.updateOne({ email }, { active: true }, {});
+        user.active = true;
 
         Reflect.deleteProperty(user, 'password');
         Reflect.deleteProperty(user, 'salt');
         Reflect.deleteProperty(user, 'friendIds');
         Reflect.deleteProperty(user, 'verificationCode');
 
+        createPokerUser(user);
         return { user };
       } else {
         throw new NotFoundResponse('Invalid verification code.');

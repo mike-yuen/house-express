@@ -1,14 +1,11 @@
-import { Request as ERequest } from 'express';
 import { Body, Controller, Post, Request, Res, Route, Security, Tags, TsoaResponse } from 'tsoa';
 
 import { COOKIE_KEY, ISignInInput, ISignInOutput } from '@/core/application/auth';
 import { IUserOutputDTO } from '@/core/domainService/user';
-import { inject, provideSingleton } from '@/infrastructure/ioc';
+import { provideSingleton } from '@/infrastructure/ioc';
 
 import { COOKIE_EXPIRATION } from './constants';
 import { AuthService } from './service';
-import { MailerService } from '@/infrastructure/mailer/service';
-// import { MailerService } from '@/infrastructure/mailer/service';
 
 @Route('auth')
 @Tags('auth')
@@ -47,7 +44,6 @@ export class AuthController extends Controller {
       const { user, token, refreshToken } = await this.authService.signIn(email, password);
 
       if (token && refreshToken) {
-        this.setHeader('Set-Cookie', [`testToken=${token}; HttpOnly; Secure; Same-Site=None`]);
         return {
           user,
           [COOKIE_KEY.token]: { value: token, maxAge: COOKIE_EXPIRATION.token },
