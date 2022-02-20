@@ -71,9 +71,9 @@ async function setupSwagger(app: App) {
   RegisterRoutes(app);
   logger.info('✌️ Routes generated');
 
-  await generateSwagger();
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc, { explorer: true }));
-  logger.info('✌️ SwaggerDoc generated');
+  // await generateSwagger();
+  // app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc, { explorer: true }));
+  // logger.info('✌️ SwaggerDoc generated');
 }
 
 export default bootstrap;
