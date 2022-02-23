@@ -23,7 +23,7 @@ export default (app: express.Application) => {
   // Enable Cross Origin Resource Sharing to all origins by default
   app.use(
     cors({
-      origin: ['http://localhost:3000', 'https://mikeyuen.netlify.app'],
+      origin: ['http://localhost:3000', 'https://mikeyuen.netlify.app', 'https://mikesland.000webhostapp.com'],
       credentials: true,
     }),
   );
