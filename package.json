@@ -11,7 +11,7 @@
     "copy:proto": "cp -r ./src/ui/gRPC/proto ./build/ui/gRPC",
     "build": "rm -rf build && tsc && npm run copy:template && npm run copy:proto",
     "dev": "nodemon",
-    "start": "node ./build/app.js",
+    "start": "NODE_ENV=production node ./build/app.js",
     "inspect": "nodemon --inspect src/app.ts",
     "test": "jest",
     "lint": "eslint --ignore-path .gitignore --ext .ts src/ --fix"
